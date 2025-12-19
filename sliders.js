@@ -105,15 +105,28 @@ function toggleLifeAreaVisible(areaKey) {
 
 function saveLifeAreas() {
     saveToUserStorage('offloadLifeAreas', JSON.stringify(state.lifeAreas));
+    saveLifeAreasToFirestore(state.lifeAreas); // Pass the actual data
 }
 
-function loadLifeAreas() {
-    try {
-        const saved = loadFromUserStorage('offloadLifeAreas');
-        if (saved) {
-            state.lifeAreas = JSON.parse(saved);
+async function loadLifeAreas() {
+    // Try Firestore first
+    const firestoreLifeAreas = await loadLifeAreasFromFirestore();
+    
+    if (firestoreLifeAreas) {
+        state.lifeAreas = firestoreLifeAreas;
+        // Also save to localStorage as backup
+        saveToUserStorage('offloadLifeAreas', JSON.stringify(firestoreLifeAreas));
+    } else {
+        // If nothing in Firestore, try localStorage as backup
+        try {
+            const saved = loadFromUserStorage('offloadLifeAreas');
+            if (saved) {
+                state.lifeAreas = JSON.parse(saved);
+                // Save to Firestore for future syncing
+                saveLifeAreasToFirestore(state.lifeAreas);
+            }
+        } catch (e) {
+            console.error('Error loading life areas:', e);
         }
-    } catch (e) {
-        console.error('Error loading life areas:', e);
     }
 }
