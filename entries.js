@@ -58,26 +58,33 @@ function renderEntry(entry, index) {
     const regulatedPercent = Math.round((availableSpace / height) * 100);
     const opportunityPercent = Math.round((bottomGateHeight / height) * 100);
 
+    // Handle both old and new entry formats
+    const opportunity = entry.opportunity || (entry.optionAssessment ? entry.optionAssessment.opportunity : { value: 0, why: '' });
+    const stressor = entry.stressor || (entry.optionAssessment ? entry.optionAssessment.stressor : { value: 0, why: '' });
+    const stabilizer = entry.stabilizer || (entry.optionAssessment ? entry.optionAssessment.stabilizer : { value: 0, why: '' });
+    const lifeArea = entry.lifeArea || (entry.optionAssessment ? entry.optionAssessment.lifeArea : 'General');
+    const optionText = entry.optionText || (entry.optionAssessment ? entry.optionAssessment.optionText : 'No description');
+
     // Build option assessment display
     const optionHtml = `
         <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb;">
             <div style="font-weight: 600; color: #374151; margin-bottom: 6px; font-size: 14px;">Option Assessed:</div>
             <div style="font-size: 13px; color: #4b5563; margin-bottom: 4px;">
-                <strong>${entry.lifeArea}:</strong> ${entry.optionText}
+                <strong>${lifeArea}:</strong> ${optionText}
             </div>
-            ${entry.opportunity.value > 0 || entry.opportunity.why ? `
+            ${opportunity.value > 0 || opportunity.why ? `
                 <div style="font-size: 12px; margin-bottom: 4px;">
-                    <span style="color: #4caf50; font-weight: 600;">💚 Opportunity (${entry.opportunity.value}):</span> ${entry.opportunity.why || '<em>No notes</em>'}
+                    <span style="color: #4caf50; font-weight: 600;">💚 Opportunity (${opportunity.value}):</span> ${opportunity.why || '<em>No notes</em>'}
                 </div>
             ` : ''}
-            ${entry.stressor.value > 0 || entry.stressor.why ? `
+            ${stressor.value > 0 || stressor.why ? `
                 <div style="font-size: 12px; margin-bottom: 4px;">
-                    <span style="color: #f44336; font-weight: 600;">⚠️ Stressor (${entry.stressor.value}):</span> ${entry.stressor.why || '<em>No notes</em>'}
+                    <span style="color: #f44336; font-weight: 600;">⚠️ Stressor (${stressor.value}):</span> ${stressor.why || '<em>No notes</em>'}
                 </div>
             ` : ''}
-            ${entry.stabilizer.value > 0 || entry.stabilizer.why ? `
+            ${stabilizer.value > 0 || stabilizer.why ? `
                 <div style="font-size: 12px;">
-                    <span style="color: #1976d2; font-weight: 600;">🛡️ Stabilizer (${entry.stabilizer.value}):</span> ${entry.stabilizer.why || '<em>No notes</em>'}
+                    <span style="color: #1976d2; font-weight: 600;">🛡️ Stabilizer (${stabilizer.value}):</span> ${stabilizer.why || '<em>No notes</em>'}
                 </div>
             ` : ''}
         </div>
