@@ -66,8 +66,18 @@
            <div style="color: #374151; line-height: 1.6; margin-bottom: 16px; padding: 12px; border-radius: 8px;">
                <p style="margin-bottom: 12px;">This tool helps you assess decisions and track your emotional state using the Window of Tolerance concept.</p>
                <p style="margin-bottom: 12px;"><strong>Section 1: Option Assessment</strong> - Evaluate specific decisions or options across three dimensions: how much it feels like an opportunity, a stressor, or a stabilizer.</p>
-               <p style="margin-bottom: 12px;"><strong>Section 2: Specific Experiences</strong> - Capture in-the-moment thoughts, feelings, or experiences that need offloading.</p>
-               <p style="margin-bottom: 0;">Both sections feed into the Window of Tolerance visualization, showing how your choices and experiences affect your nervous system's capacity to process information in a regulated way.</p>
+               <p style="margin-bottom: 0;">The visualization shows how your choices affect your nervous system's capacity to process information in a regulated way.</p>
+           </div>
+       </div>
+   </div>
+
+   <div id="lifeAreasModal" class="modal-overlay" onclick="if(event.target === this) closeLifeAreasModal()">
+       <div class="modal-content">
+           <button class="modal-close" onclick="closeLifeAreasModal()">×</button>
+           <h2 style="margin-bottom: 16px; color: #111827;">Edit Life Areas</h2>
+           <div id="lifeAreasModalContent"></div>
+           <div style="margin-top: 16px;">
+               <button class="btn" onclick="addLifeArea()" style="background: #16a34a; color: white; width: 100%; padding: 10px;">+ Add New Life Area</button>
            </div>
        </div>
    </div>
