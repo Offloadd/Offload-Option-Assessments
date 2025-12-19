@@ -1,80 +1,42 @@
 // calculations.js - Load Calculation Functions
 
 function getThreatLoad() {
-    let threatTotal = 0;
-
-    // Option Assessment - Stressor
-    threatTotal += state.stressor.value;
-
-    // Specific Experiences - Ambient sliders
-    state.ambient.forEach(amb => {
-        if (amb.value !== 0 && amb.type === 'threat') {
-            threatTotal += amb.value;
-        }
-    });
-
-    return threatTotal;
+    return state.stressor.value;
 }
 
 function getOpportunityLoad() {
-    let opportunityTotal = 0;
-
-    // Option Assessment - Opportunity
-    opportunityTotal += state.opportunity.value;
-
-    // Specific Experiences - Ambient sliders
-    state.ambient.forEach(amb => {
-        if (amb.value !== 0 && amb.type === 'opportunity') {
-            opportunityTotal += amb.value;
-        }
-    });
-
-    return opportunityTotal;
+    return state.opportunity.value;
 }
 
 function getRegulatedLoad() {
-    let regulatedTotal = 0;
-
-    // Option Assessment - Stabilizer
-    regulatedTotal += state.stabilizer.value;
-
-    // Specific Experiences - Ambient sliders
-    state.ambient.forEach(amb => {
-        if (amb.value !== 0 && amb.type === 'regulated') {
-            regulatedTotal += amb.value;
-        }
-    });
-
-    return regulatedTotal;
+    return state.stabilizer.value;
 }
 
 function validateSave() {
     const errors = [];
-    state.ambient.forEach((amb, i) => {
-        if (amb.value !== 0) {
-            if (!amb.type) errors.push('Internal Activity ' + (i+1) + ': Type is required when slider is not at 0');
-            if (!amb.note.trim()) errors.push('Internal Activity ' + (i+1) + ': Note is required when slider is not at 0');
-        }
-    });
+    
+    if (!state.activeLifeArea) {
+        errors.push('Please select a life area to assess');
+    }
+    
+    if (!state.activeOptionText.trim()) {
+        errors.push('Please describe the specific option you\'re considering');
+    }
+    
+    const hasData = state.opportunity.value > 0 || state.stressor.value > 0 || state.stabilizer.value > 0;
+    if (!hasData) {
+        errors.push('Please rate at least one assessment slider');
+    }
+    
     return errors;
 }
 
 function resetAllSliders() {
-    // Reset option assessment
     state.activeLifeArea = null;
     state.activeOptionText = '';
     state.opportunity = { value: 0, why: '' };
     state.stressor = { value: 0, why: '' };
     state.stabilizer = { value: 0, why: '' };
-
-    // Reset ambient sliders - keep first one, reset it
-    state.ambient = [{
-        id: Date.now(),
-        value: 0,
-        type: 'opportunity',
-        note: '',
-        locked: false
-    }];
 }
 
 async function saveEntry() {
@@ -93,32 +55,15 @@ async function saveEntry() {
 
     const entry = {
         timestamp: new Date().toISOString(),
+        lifeArea: state.lifeAreas[state.activeLifeArea].label,
+        optionText: state.activeOptionText,
+        opportunity: { value: state.opportunity.value, why: state.opportunity.why },
+        stressor: { value: state.stressor.value, why: state.stressor.why },
+        stabilizer: { value: state.stabilizer.value, why: state.stabilizer.why },
         threatLoad,
         opportunityLoad,
         regulatedLoad
     };
-
-    // Add option assessment data if present
-    if (state.activeLifeArea && state.activeOptionText.trim()) {
-        entry.optionAssessment = {
-            lifeArea: state.lifeAreas[state.activeLifeArea].label,
-            optionText: state.activeOptionText,
-            opportunity: { value: state.opportunity.value, why: state.opportunity.why },
-            stressor: { value: state.stressor.value, why: state.stressor.why },
-            stabilizer: { value: state.stabilizer.value, why: state.stabilizer.why }
-        };
-    }
-
-    // Add ambient data if present
-    const ambientData = state.ambient.filter(a => a.value !== 0).map(a => ({
-        value: a.value,
-        type: a.type,
-        note: a.note
-    }));
-    
-    if (ambientData.length > 0) {
-        entry.ambient = ambientData;
-    }
 
     await saveToFirestore(entry);
     
