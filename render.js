@@ -80,8 +80,7 @@ const html =
                         '<input type="text" ' +
                                'value="' + state.activeOptionText + '" ' +
                                'oninput="updateOptionText(this.value);" ' +
-                               (state.activeLifeArea ? '' : 'disabled ') +
-                               'placeholder="' + (state.activeLifeArea ? 'e.g., Accept Isaac\'s excavation project' : 'Select a life area first') + '" ' +
+                               'placeholder="e.g., Accept Isaac\'s excavation project, or just describe what\'s on your mind" ' +
                                'style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 14px;">' +
                     '</div>' +
                     
@@ -93,19 +92,14 @@ const html =
                             '<div style="flex: 1; max-width: 90%;">' +
                                 '<input type="range" min="0" max="10" value="' + state.opportunity.value + '" ' +
                                        'oninput="updateAssessment(\'opportunity\', this.value)" ' +
-                                       (state.activeLifeArea ? '' : 'disabled ') +
                                        'style="width: 100%; height: 6px; border-radius: 3px; outline: none; -webkit-appearance: none; cursor: pointer; ' +
-                                       'background: ' + getAssessmentGradient('opportunity') + '; ' + 
-                                       (state.activeLifeArea ? '' : 'opacity: 0.5; cursor: not-allowed;') + '">' +
+                                       'background: ' + getAssessmentGradient('opportunity') + ';">' +
                             '</div>' +
                             '<button class="btn" onclick="toggleTextArea(\'opportunity\')" ' +
-                                    (state.activeLifeArea ? '' : 'disabled ') +
-                                    'style="background: #e5e7eb; color: #374151; padding: 4px 8px; font-size: 11px; white-space: nowrap; ' +
-                                    (state.activeLifeArea ? '' : 'opacity: 0.5; cursor: not-allowed;') + '">text</button>' +
+                                    'style="background: #e5e7eb; color: #374151; padding: 4px 8px; font-size: 11px; white-space: nowrap;">text</button>' +
                         '</div>' +
                         '<textarea id="opportunityText" style="display: none; width: 100%; padding: 4px 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; font-family: inherit; height: 18px; resize: none; overflow-y: auto;" ' +
                                'placeholder="Why does this feel like an opportunity?" ' +
-                               (state.activeLifeArea ? '' : 'disabled ') +
                                'oninput="updateAssessmentText(\'opportunity\', this.value)">' + state.opportunity.why + '</textarea>' +
                     '</div>' +
                     
@@ -117,19 +111,14 @@ const html =
                             '<div style="flex: 1; max-width: 90%;">' +
                                 '<input type="range" min="0" max="10" value="' + state.stressor.value + '" ' +
                                        'oninput="updateAssessment(\'stressor\', this.value)" ' +
-                                       (state.activeLifeArea ? '' : 'disabled ') +
                                        'style="width: 100%; height: 6px; border-radius: 3px; outline: none; -webkit-appearance: none; cursor: pointer; ' +
-                                       'background: ' + getAssessmentGradient('stressor') + '; ' + 
-                                       (state.activeLifeArea ? '' : 'opacity: 0.5; cursor: not-allowed;') + '">' +
+                                       'background: ' + getAssessmentGradient('stressor') + ';">' +
                             '</div>' +
                             '<button class="btn" onclick="toggleTextArea(\'stressor\')" ' +
-                                    (state.activeLifeArea ? '' : 'disabled ') +
-                                    'style="background: #e5e7eb; color: #374151; padding: 4px 8px; font-size: 11px; white-space: nowrap; ' +
-                                    (state.activeLifeArea ? '' : 'opacity: 0.5; cursor: not-allowed;') + '">text</button>' +
+                                    'style="background: #e5e7eb; color: #374151; padding: 4px 8px; font-size: 11px; white-space: nowrap;">text</button>' +
                         '</div>' +
                         '<textarea id="stressorText" style="display: none; width: 100%; padding: 4px 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; font-family: inherit; height: 18px; resize: none; overflow-y: auto;" ' +
                                'placeholder="Why does this feel stressful?" ' +
-                               (state.activeLifeArea ? '' : 'disabled ') +
                                'oninput="updateAssessmentText(\'stressor\', this.value)">' + state.stressor.why + '</textarea>' +
                     '</div>' +
                     
@@ -141,20 +130,20 @@ const html =
                             '<div style="flex: 1; max-width: 90%;">' +
                                 '<input type="range" min="0" max="10" value="' + state.stabilizer.value + '" ' +
                                        'oninput="updateAssessment(\'stabilizer\', this.value)" ' +
-                                       (state.activeLifeArea ? '' : 'disabled ') +
                                        'style="width: 100%; height: 6px; border-radius: 3px; outline: none; -webkit-appearance: none; cursor: pointer; ' +
-                                       'background: ' + getAssessmentGradient('stabilizer') + '; ' + 
-                                       (state.activeLifeArea ? '' : 'opacity: 0.5; cursor: not-allowed;') + '">' +
+                                       'background: ' + getAssessmentGradient('stabilizer') + ';">' +
                             '</div>' +
                             '<button class="btn" onclick="toggleTextArea(\'stabilizer\')" ' +
-                                    (state.activeLifeArea ? '' : 'disabled ') +
-                                    'style="background: #e5e7eb; color: #374151; padding: 4px 8px; font-size: 11px; white-space: nowrap; ' +
-                                    (state.activeLifeArea ? '' : 'opacity: 0.5; cursor: not-allowed;') + '">text</button>' +
+                                    'style="background: #e5e7eb; color: #374151; padding: 4px 8px; font-size: 11px; white-space: nowrap;">text</button>' +
                         '</div>' +
                         '<textarea id="stabilizerText" style="display: none; width: 100%; padding: 4px 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; font-family: inherit; height: 18px; resize: none; overflow-y: auto;" ' +
                                'placeholder="Why does this feel stabilizing?" ' +
-                               (state.activeLifeArea ? '' : 'disabled ') +
                                'oninput="updateAssessmentText(\'stabilizer\', this.value)">' + state.stabilizer.why + '</textarea>' +
+                    '</div>' +
+                    
+                    // Save button
+                    '<div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb;">' +
+                        '<button class="btn" onclick="saveEntry()" style="width: 100%; padding: 12px; background: #16a34a; color: white; font-size: 15px; font-weight: 600;">💾 Save to Data Set & Clear Sliders</button>' +
                     '</div>' +
                 '</div>' +
             '</div>'
