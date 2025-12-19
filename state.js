@@ -2,9 +2,7 @@
 
 const state = {
     section1Expanded: false,  // Option Assessment
-    section2Expanded: false,  // Specific Experiences
     visualOpacity: 0,
-    legendEditing: false,
     
     // Option Assessment state
     activeLifeArea: null,
@@ -22,18 +20,12 @@ const state = {
         learning: { label: 'Learning/Growth', visible: true, custom: false }
     },
     
-    // Specific Experiences (formerly Section 4)
-    ambient: [
-        { id: Date.now(), value: 0, type: 'opportunity', note: '', locked: false }
-    ],
-    
     entries: [],
     saveError: ''
 };
 
 function toggleSection(section) {
     if (section === 1) state.section1Expanded = !state.section1Expanded;
-    if (section === 2) state.section2Expanded = !state.section2Expanded;
     render();
 }
 
@@ -91,17 +83,6 @@ function getAssessmentGradient(type) {
     if (type === 'stressor') {
         return 'linear-gradient(to right, #ffeb3b 0%, #ff9800 50%, #f44336 100%)';
     } else if (type === 'stabilizer') {
-        return 'linear-gradient(to right, #bbdefb 0%, #1976d2 100%)';
-    } else if (type === 'opportunity') {
-        return 'linear-gradient(to right, #c8e6c9 0%, #4caf50 50%, #cddc39 100%)';
-    }
-    return 'linear-gradient(to right, #d1d5db 0%, #d1d5db 100%)';
-}
-
-function getAmbientSliderGradient(type) {
-    if (type === 'threat') {
-        return 'linear-gradient(to right, #ffeb3b 0%, #ff9800 50%, #f44336 100%)';
-    } else if (type === 'regulated') {
         return 'linear-gradient(to right, #bbdefb 0%, #1976d2 100%)';
     } else if (type === 'opportunity') {
         return 'linear-gradient(to right, #c8e6c9 0%, #4caf50 50%, #cddc39 100%)';
