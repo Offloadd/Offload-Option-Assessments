@@ -3,16 +3,8 @@
 // ============================================================================
 
 function loadLifeArea(areaKey) {
-    // If clicking the same area, deselect it
-    if (state.activeLifeArea === areaKey) {
-        state.activeLifeArea = null;
-        state.activeOptionText = '';
-        resetAssessmentSliders();
-    } else {
-        state.activeLifeArea = areaKey;
-        state.activeOptionText = '';
-        resetAssessmentSliders();
-    }
+    // Set the active life area (empty string means no selection)
+    state.activeLifeArea = areaKey || null;
     render();
 }
 
@@ -56,6 +48,12 @@ function addLifeArea() {
         custom: true
     };
     saveLifeAreas();
+    
+    // Check if modal is open and refresh it
+    const modal = document.getElementById('lifeAreasModal');
+    if (modal && modal.classList.contains('active')) {
+        renderLifeAreasModal();
+    }
     render();
 }
 
@@ -66,6 +64,12 @@ function editLifeArea(areaKey) {
     
     area.label = newLabel.trim();
     saveLifeAreas();
+    
+    // Check if modal is open and refresh it
+    const modal = document.getElementById('lifeAreasModal');
+    if (modal && modal.classList.contains('active')) {
+        renderLifeAreasModal();
+    }
     render();
 }
 
@@ -74,18 +78,28 @@ function deleteLifeArea(areaKey) {
     
     if (state.activeLifeArea === areaKey) {
         state.activeLifeArea = null;
-        state.activeOptionText = '';
-        resetAssessmentSliders();
     }
     
     delete state.lifeAreas[areaKey];
     saveLifeAreas();
+    
+    // Check if modal is open and refresh it
+    const modal = document.getElementById('lifeAreasModal');
+    if (modal && modal.classList.contains('active')) {
+        renderLifeAreasModal();
+    }
     render();
 }
 
 function toggleLifeAreaVisible(areaKey) {
     state.lifeAreas[areaKey].visible = !state.lifeAreas[areaKey].visible;
     saveLifeAreas();
+    
+    // Check if modal is open and refresh it
+    const modal = document.getElementById('lifeAreasModal');
+    if (modal && modal.classList.contains('active')) {
+        renderLifeAreasModal();
+    }
     render();
 }
 
