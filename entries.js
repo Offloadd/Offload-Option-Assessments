@@ -58,52 +58,30 @@ function renderEntry(entry, index) {
     const regulatedPercent = Math.round((availableSpace / height) * 100);
     const opportunityPercent = Math.round((bottomGateHeight / height) * 100);
 
-    // Build option assessment section if present
-    let optionAssessmentHtml = '';
-    if (entry.optionAssessment) {
-        const opt = entry.optionAssessment;
-        optionAssessmentHtml = `
-            <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb;">
-                <div style="font-weight: 600; color: #374151; margin-bottom: 6px; font-size: 14px;">Option Assessed:</div>
-                <div style="font-size: 13px; color: #4b5563; margin-bottom: 4px;">
-                    <strong>${opt.lifeArea}:</strong> ${opt.optionText}
-                </div>
-                ${opt.opportunity.value > 0 || opt.opportunity.why ? `
-                    <div style="font-size: 12px; margin-bottom: 4px;">
-                        <span style="color: #4caf50; font-weight: 600;">💚 Opportunity (${opt.opportunity.value}):</span> ${opt.opportunity.why || '<em>No notes</em>'}
-                    </div>
-                ` : ''}
-                ${opt.stressor.value > 0 || opt.stressor.why ? `
-                    <div style="font-size: 12px; margin-bottom: 4px;">
-                        <span style="color: #f44336; font-weight: 600;">⚠️ Stressor (${opt.stressor.value}):</span> ${opt.stressor.why || '<em>No notes</em>'}
-                    </div>
-                ` : ''}
-                ${opt.stabilizer.value > 0 || opt.stabilizer.why ? `
-                    <div style="font-size: 12px;">
-                        <span style="color: #1976d2; font-weight: 600;">🛡️ Stabilizer (${opt.stabilizer.value}):</span> ${opt.stabilizer.why || '<em>No notes</em>'}
-                    </div>
-                ` : ''}
+    // Build option assessment display
+    const optionHtml = `
+        <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb;">
+            <div style="font-weight: 600; color: #374151; margin-bottom: 6px; font-size: 14px;">Option Assessed:</div>
+            <div style="font-size: 13px; color: #4b5563; margin-bottom: 4px;">
+                <strong>${entry.lifeArea}:</strong> ${entry.optionText}
             </div>
-        `;
-    }
-
-    // Build ambient notes section if present
-    let notesHtml = '';
-    if (entry.ambient && entry.ambient.length > 0) {
-        const notes = entry.ambient.map(amb => {
-            const typeLabel = amb.type.charAt(0).toUpperCase() + amb.type.slice(1);
-            return `<div style="margin-bottom: 4px;">• ${typeLabel} (${amb.value}): ${amb.note}</div>`;
-        }).join('');
-        
-        notesHtml = `
-            <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb;">
-                <div style="font-weight: 600; color: #374151; margin-bottom: 6px; font-size: 14px;">Specific Experiences:</div>
-                <div style="font-size: 13px; color: #4b5563; line-height: 1.6;">
-                    ${notes}
+            ${entry.opportunity.value > 0 || entry.opportunity.why ? `
+                <div style="font-size: 12px; margin-bottom: 4px;">
+                    <span style="color: #4caf50; font-weight: 600;">💚 Opportunity (${entry.opportunity.value}):</span> ${entry.opportunity.why || '<em>No notes</em>'}
                 </div>
-            </div>
-        `;
-    }
+            ` : ''}
+            ${entry.stressor.value > 0 || entry.stressor.why ? `
+                <div style="font-size: 12px; margin-bottom: 4px;">
+                    <span style="color: #f44336; font-weight: 600;">⚠️ Stressor (${entry.stressor.value}):</span> ${entry.stressor.why || '<em>No notes</em>'}
+                </div>
+            ` : ''}
+            ${entry.stabilizer.value > 0 || entry.stabilizer.why ? `
+                <div style="font-size: 12px;">
+                    <span style="color: #1976d2; font-weight: 600;">🛡️ Stabilizer (${entry.stabilizer.value}):</span> ${entry.stabilizer.why || '<em>No notes</em>'}
+                </div>
+            ` : ''}
+        </div>
+    `;
 
     return `
         <div style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
@@ -121,8 +99,7 @@ function renderEntry(entry, index) {
                     Delete
                 </button>
             </div>
-            ${optionAssessmentHtml}
-            ${notesHtml}
+            ${optionHtml}
         </div>
     `;
 }
@@ -151,7 +128,7 @@ function copyLast20Entries() {
         return;
     }
 
-    let csv = 'Timestamp,Stress %,Stabilized %,Opportunity %,Stressor Amount,Stabilizer Amount,Opportunity Amount,Option Assessment,Specific Experiences\n';
+    let csv = 'Timestamp,Stress %,Stabilized %,Opportunity %,Stressor Amount,Stabilizer Amount,Opportunity Amount,Life Area,Option\n';
 
     entriesToCopy.forEach(entry => {
         const date = new Date(entry.timestamp);
@@ -187,19 +164,6 @@ function copyLast20Entries() {
         const regulatedPercent = Math.round((availableSpace / height) * 100);
         const opportunityPercent = Math.round((bottomGateHeight / height) * 100);
 
-        let optionText = '';
-        if (entry.optionAssessment) {
-            optionText = `${entry.optionAssessment.lifeArea}: ${entry.optionAssessment.optionText}`;
-        }
-
-        const notes = [];
-        if (entry.ambient && entry.ambient.length > 0) {
-            entry.ambient.forEach(amb => {
-                const typeLabel = amb.type.charAt(0).toUpperCase() + amb.type.slice(1);
-                notes.push(`${typeLabel} (${amb.value}): ${amb.note}`);
-            });
-        }
-
         const escapeCsv = (str) => {
             if (str.includes(',') || str.includes('"') || str.includes('\n')) {
                 return '"' + str.replace(/"/g, '""') + '"';
@@ -207,7 +171,7 @@ function copyLast20Entries() {
             return str;
         };
 
-        csv += `${escapeCsv(formattedDate)},${stressPercent},${regulatedPercent},${opportunityPercent},${entry.threatLoad},${entry.regulatedLoad},${entry.opportunityLoad},${escapeCsv(optionText)},${escapeCsv(notes.join('; '))}\n`;
+        csv += `${escapeCsv(formattedDate)},${stressPercent},${regulatedPercent},${opportunityPercent},${entry.threatLoad},${entry.regulatedLoad},${entry.opportunityLoad},${escapeCsv(entry.lifeArea)},${escapeCsv(entry.optionText)}\n`;
     });
 
     navigator.clipboard.writeText(csv).then(() => {
