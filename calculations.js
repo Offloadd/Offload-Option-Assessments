@@ -15,12 +15,8 @@ function getRegulatedLoad() {
 function validateSave() {
     const errors = [];
     
-    if (!state.activeLifeArea) {
-        errors.push('Please select a life area to assess');
-    }
-    
     if (!state.activeOptionText.trim()) {
-        errors.push('Please describe the specific option you\'re considering');
+        errors.push('Please describe what you\'re considering in the text field');
     }
     
     const hasData = state.opportunity.value > 0 || state.stressor.value > 0 || state.stabilizer.value > 0;
@@ -55,7 +51,7 @@ async function saveEntry() {
 
     const entry = {
         timestamp: new Date().toISOString(),
-        lifeArea: state.lifeAreas[state.activeLifeArea].label,
+        lifeArea: state.activeLifeArea ? state.lifeAreas[state.activeLifeArea].label : 'General',
         optionText: state.activeOptionText,
         opportunity: { value: state.opportunity.value, why: state.opportunity.why },
         stressor: { value: state.stressor.value, why: state.stressor.why },
