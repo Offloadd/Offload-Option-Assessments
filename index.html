@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Offload - Combined Tool</title>
+   
+   <!-- Firebase SDK -->
+   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+   
+   <script>
+       // Firebase configuration
+       const firebaseConfig = {
+           apiKey: "AIzaSyA89BZxelKRoK64JnYtSdWUho2WUfWymII",
+           authDomain: "capacity-monitor.firebaseapp.com",
+           projectId: "capacity-monitor",
+           storageBucket: "capacity-monitor.firebasestorage.app",
+           messagingSenderId: "455641716280",
+           appId: "1:455641716280:web:5848888e290e47114c78cd",
+           measurementId: "G-CGR5R0D1SP"
+       };
+
+       // Initialize Firebase
+       firebase.initializeApp(firebaseConfig);
+       const auth = firebase.auth();
+       const db = firebase.firestore();
+       
+       // Make db available globally
+       window.db = db;
+
+       // Auth state listener
+       auth.onAuthStateChanged(user => {
+           if (user) {
+               document.getElementById('authContainer').style.display = 'none';
+               document.getElementById('app').style.display = 'block';
+               window.currentUser = user;
+               loadState();
+               loadFromFirestore().then(() => render());
+           } else {
+               document.getElementById('authContainer').style.display = 'block';
+               document.getElementById('app').style.display = 'none';
+               window.currentUser = null;
+           }
+       });
+   </script>
+   
+   <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+   <div id="authContainer" class="auth-container">
+       <div class="auth-title">Offload</div>
+       <div class="subtitle" style="text-align: center; margin-bottom: 20px;">Sign in to save your data to the cloud</div>
+       <div id="authMessage" class="auth-message"></div>
+       <input type="email" id="emailInput" class="auth-input" placeholder="Email" autocomplete="email">
+       <input type="password" id="passwordInput" class="auth-input" placeholder="Password (min 6 characters)" autocomplete="current-password">
+       <button class="auth-btn" id="signInBtn" onclick="handleSignIn()">Sign In</button>
+       <button class="auth-btn" id="createAccountBtn" onclick="handleCreateAccount()">Create Account</button>
+   </div>
+
+   <div id="introModal" class="modal-overlay" onclick="if(event.target === this) closeIntroModal()">
+       <div class="modal-content">
+           <button class="modal-close" onclick="closeIntroModal()">×</button>
+           <h2 style="margin-bottom: 16px; color: #111827;">Welcome to Offload</h2>
+           <div style="color: #374151; line-height: 1.6; margin-bottom: 16px; padding: 12px; border-radius: 8px;">
+               <p style="margin-bottom: 12px;">This tool helps you assess decisions and track your emotional state using the Window of Tolerance concept.</p>
+               <p style="margin-bottom: 12px;"><strong>Section 1: Option Assessment</strong> - Evaluate specific decisions or options across three dimensions: how much it feels like an opportunity, a stressor, or a stabilizer.</p>
+               <p style="margin-bottom: 12px;"><strong>Section 2: Specific Experiences</strong> - Capture in-the-moment thoughts, feelings, or experiences that need offloading.</p>
+               <p style="margin-bottom: 0;">Both sections feed into the Window of Tolerance visualization, showing how your choices and experiences affect your nervous system's capacity to process information in a regulated way.</p>
+           </div>
+       </div>
+   </div>
+
+   <div class="container" id="app"></div>
+
+   <!-- Load JavaScript files in order -->
+   <script src="auth.js"></script>
+   <script src="firestore.js"></script>
+   <script src="storage.js"></script>
+   <script src="state.js"></script>
+   <script src="sliders.js"></script>
+   <script src="calculations.js"></script>
+   <script src="entries.js"></script>
+   <script src="modals.js"></script>
+   <script src="render.js"></script>
+</body>
+</html>
