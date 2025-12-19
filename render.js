@@ -30,44 +30,18 @@ const html =
             '<div style="margin-top: 12px;">' +
                 // Life Areas Section
                 '<div style="margin-bottom: 12px;">' +
-                    '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">' +
-                        '<h3 style="margin: 0; font-size: 16px;">Life Areas & Options</h3>' +
-                        '<button class="btn" onclick="addLifeArea()" style="background: #16a34a; color: white; font-size: 12px;">+ Add Life Area</button>' +
+                    '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">' +
+                        '<h3 style="margin: 0; font-size: 16px;">Life Area (Optional)</h3>' +
+                        '<button class="btn" onclick="openLifeAreasModal()" style="background: #3b82f6; color: white; font-size: 12px;">✏️ Edit Areas</button>' +
                     '</div>' +
-                    '<div style="font-size: 13px; color: #6b7280; margin-bottom: 12px;">Click a life area to assess a specific option</div>' +
-                    '<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px;">' +
+                    '<select onchange="loadLifeArea(this.value)" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 14px; background: white;">' +
+                        '<option value="">-- Select a life area (optional) --</option>' +
                         Object.keys(state.lifeAreas).filter(key => state.lifeAreas[key].visible).map(areaKey => {
                             const area = state.lifeAreas[areaKey];
                             const isActive = state.activeLifeArea === areaKey;
-                            return '<div style="display: flex; align-items: center; gap: 4px;">' +
-                                   '<div class="life-area-item ' + (isActive ? 'active' : '') + '" ' +
-                                   'onclick="loadLifeArea(\'' + areaKey + '\')" style="flex: 1; margin: 0; padding: 8px 12px; background: #f9fafb; border-radius: 4px; cursor: pointer; transition: all 0.2s; border-left: 3px solid #3b82f6;">' +
-                                   area.label +
-                                   (isActive ? ' ✓' : '') +
-                                   '</div>' +
-                                   '<button class="btn" onclick="event.stopPropagation(); editLifeArea(\'' + areaKey + '\')" ' +
-                                           'style="background: #3b82f6; color: white; padding: 4px 8px; font-size: 11px; flex-shrink: 0;">✏️</button>' +
-                                   (area.custom ?
-                                       '<button class="btn" onclick="event.stopPropagation(); deleteLifeArea(\'' + areaKey + '\')" ' +
-                                               'style="background: #dc2626; color: white; padding: 4px 8px; font-size: 11px; flex-shrink: 0;">🗑️</button>' :
-                                       '<button class="btn" onclick="event.stopPropagation(); toggleLifeAreaVisible(\'' + areaKey + '\')" ' +
-                                               'style="background: #6b7280; color: white; padding: 4px 8px; font-size: 11px; flex-shrink: 0;">👁️</button>') +
-                                   '</div>';
+                            return '<option value="' + areaKey + '" ' + (isActive ? 'selected' : '') + '>' + area.label + '</option>';
                         }).join('') +
-                    '</div>' +
-                    (Object.keys(state.lifeAreas).filter(key => !state.lifeAreas[key].visible).length > 0 ?
-                        '<div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb;">' +
-                            '<div style="font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 6px;">Hidden Areas:</div>' +
-                            Object.keys(state.lifeAreas).filter(key => !state.lifeAreas[key].visible).map(areaKey => {
-                                const area = state.lifeAreas[areaKey];
-                                return '<div style="display: inline-block; margin: 2px;">' +
-                                       '<button class="btn" onclick="toggleLifeAreaVisible(\'' + areaKey + '\')" ' +
-                                               'style="background: #f3f4f6; color: #6b7280; padding: 4px 8px; font-size: 11px; border: 1px solid #d1d5db;">' +
-                                           area.label + ' (Show)' +
-                                       '</button>' +
-                                       '</div>';
-                            }).join('') +
-                        '</div>' : '') +
+                    '</select>' +
                 '</div>' +
                 
                 // Assessment Zone
