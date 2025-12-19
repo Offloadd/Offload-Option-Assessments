@@ -17,6 +17,81 @@ async function saveToFirestore(entry) {
     }
 }
 
+async function saveLifeAreasToFirestore(lifeAreas) {
+    const user = window.currentUser;
+    if (!user || !window.db) {
+        console.log('No user or Firestore not initialized, skipping cloud save');
+        return;
+    }
+    
+    try {
+        await db.collection('users').doc(user.uid).set({
+            lifeAreas: lifeAreas
+        }, { merge: true });
+        console.log('Life areas saved to Firestore');
+    } catch (error) {
+        console.error('Error saving life areas to Firestore:', error);
+    }
+}
+
+async function loadLifeAreasFromFirestore() {
+    const user = window.currentUser;
+    if (!user || !window.db) {
+        console.log('No user or Firestore not initialized');
+        return null;
+    }
+    
+    try {
+        const doc = await db.collection('users').doc(user.uid).get();
+        if (doc.exists && doc.data().lifeAreas) {
+            console.log('Loaded life areas from Firestore');
+            return doc.data().lifeAreas;
+        }
+        return null;
+    } catch (error) {
+        console.error('Error loading life areas from Firestore:', error);
+        return null;
+    }
+}
+
+async function saveLifeAreasToFirestore() {
+    const user = window.currentUser;
+    if (!user || !window.db) {
+        console.log('No user or Firestore not initialized, skipping cloud save');
+        return;
+    }
+    
+    try {
+        await db.collection('users').doc(user.uid).set({
+            lifeAreas: state.lifeAreas
+        }, { merge: true });
+        console.log('Life areas saved to Firestore');
+    } catch (error) {
+        console.error('Error saving life areas to Firestore:', error);
+    }
+}
+
+async function loadLifeAreasFromFirestore() {
+    const user = window.currentUser;
+    if (!user || !window.db) {
+        console.log('No user or Firestore not initialized');
+        return;
+    }
+    
+    try {
+        const doc = await db.collection('users').doc(user.uid).get();
+        if (doc.exists && doc.data().lifeAreas) {
+            state.lifeAreas = doc.data().lifeAreas;
+            console.log('Loaded life areas from Firestore');
+            saveToUserStorage('offloadLifeAreas', JSON.stringify(state.lifeAreas));
+        } else {
+            console.log('No life areas found in Firestore, using defaults');
+        }
+    } catch (error) {
+        console.error('Error loading life areas from Firestore:', error);
+    }
+}
+
 async function loadFromFirestore() {
     const user = window.currentUser;
     if (!user || !window.db) {
@@ -25,6 +100,14 @@ async function loadFromFirestore() {
     }
     
     try {
+        // Load life areas first
+        const firestoreLifeAreas = await loadLifeAreasFromFirestore();
+        if (firestoreLifeAreas) {
+            state.lifeAreas = firestoreLifeAreas;
+            saveToUserStorage('offloadLifeAreas', JSON.stringify(firestoreLifeAreas));
+        }
+        
+        // Then load entries
         const snapshot = await db.collection('users')
             .doc(user.uid)
             .collection('entries')
