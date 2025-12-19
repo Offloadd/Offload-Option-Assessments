@@ -511,3 +511,87 @@ textarea {
 .user-badge {
     display: none !important;
 }
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    body {
+        padding: 8px;
+    }
+    
+    .sections-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .card {
+        padding: 12px;
+    }
+    
+    h1 {
+        font-size: 18px;
+    }
+    
+    h2 {
+        font-size: 16px;
+    }
+    
+    .subtitle {
+        font-size: 12px;
+    }
+    
+    /* Make header stack on mobile */
+    .card.header > div {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+    }
+    
+    /* Make buttons in save section stack */
+    .card [style*="display: flex"][style*="gap: 8px"][style*="flex-wrap: wrap"] {
+        flex-direction: column !important;
+    }
+    
+    /* Make sure text inputs don't overflow */
+    input[type="text"], 
+    textarea, 
+    select {
+        max-width: 100%;
+        font-size: 16px !important; /* Prevents zoom on iOS */
+    }
+    
+    /* Adjust slider containers for mobile */
+    .slider-group {
+        margin-bottom: 8px;
+    }
+    
+    /* Make the visualization taller on mobile for better visibility */
+    .visualization {
+        height: 250px;
+        min-height: 250px;
+    }
+    
+    /* Color legend narrower on mobile */
+    .color-legend {
+        width: 70px;
+        left: 5px;
+        top: 5px;
+        bottom: 5px;
+    }
+    
+    .color-legend div {
+        font-size: 7px !important;
+        padding: 4px 2px !important;
+    }
+    
+    /* Modal adjustments */
+    .modal-content {
+        padding: 16px;
+        max-width: 95vw;
+    }
+    
+    /* Ensure entry cards are readable */
+    .card [style*="display: flex"][style*="justify-content: space-between"] button {
+        min-width: auto;
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+}
