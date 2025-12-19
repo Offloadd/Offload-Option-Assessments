@@ -1,7 +1,7 @@
 // state.js - State Object and Management Functions
 
 const state = {
-    section1Expanded: false,  // Option Assessment
+    section1Expanded: true,  // Option Assessment - start expanded
     visualOpacity: 0,
     
     // Option Assessment state
