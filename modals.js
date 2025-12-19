@@ -8,6 +8,32 @@ function closeIntroModal() {
     document.getElementById('introModal').classList.remove('active');
 }
 
+function openLifeAreasModal() {
+    renderLifeAreasModal();
+    document.getElementById('lifeAreasModal').classList.add('active');
+}
+
+function closeLifeAreasModal() {
+    document.getElementById('lifeAreasModal').classList.remove('active');
+    render(); // Refresh main UI
+}
+
+function renderLifeAreasModal() {
+    const container = document.getElementById('lifeAreasModalContent');
+    const html = Object.keys(state.lifeAreas).map(areaKey => {
+        const area = state.lifeAreas[areaKey];
+        return `
+            <div style="display: flex; align-items: center; gap: 8px; padding: 8px; background: ${area.visible ? '#f9fafb' : '#fee2e2'}; border-radius: 4px; margin-bottom: 8px;">
+                <div style="flex: 1; font-weight: 600;">${area.label}</div>
+                <button class="btn" onclick="editLifeArea('${areaKey}')" style="background: #3b82f6; color: white; padding: 6px 12px; font-size: 12px;">✏️ Edit</button>
+                <button class="btn" onclick="toggleLifeAreaVisible('${areaKey}')" style="background: ${area.visible ? '#6b7280' : '#16a34a'}; color: white; padding: 6px 12px; font-size: 12px;">${area.visible ? '👁️ Hide' : '👁️ Show'}</button>
+                ${area.custom ? `<button class="btn" onclick="deleteLifeArea('${areaKey}')" style="background: #dc2626; color: white; padding: 6px 12px; font-size: 12px;">🗑️</button>` : ''}
+            </div>
+        `;
+    }).join('');
+    container.innerHTML = html;
+}
+
 function openInfoModal(modalId) {
     document.getElementById(modalId).classList.add('active');
 }
