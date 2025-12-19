@@ -161,116 +161,10 @@ const html =
         : '') +
     '</div>' +
 
-    renderPart2();
-
-document.getElementById('app').innerHTML = html;
-
-const threatLoad = getThreatLoad();
-const opportunityLoad = getOpportunityLoad();
-const regulatedLoad = getRegulatedLoad();
-setTimeout(() => updateVisualization(threatLoad, opportunityLoad, regulatedLoad), 0);
-displayEntries();
-}
-
-// render.js - Part 2 - Specific Experiences, Visualization, Save Button
-
-function renderPart2() {
-    // Section 2: Specific Experiences (formerly Section 4)
-    return '<div class="section-card section-orange ' + (state.section2Expanded ? 'expanded' : '') + '" ' +
-         (state.section2Expanded ? '' : 'onclick="event.stopPropagation(); toggleSection(2)"') + '>' +
-        '<div class="section-header">' +
-            '<div>' +
-                '<div class="section-title">2. Specific Experiences</div>' +
-                (state.section2Expanded ? '' : '<div class="section-subtitle">What needs offloading right now?</div>') +
-            '</div>' +
-            '<button class="expand-btn" onclick="event.stopPropagation(); toggleSection(2)" style="background: #f97316;">' +
-                (state.section2Expanded ? 'Hide ▲' : 'Show ▼') +
-            '</button>' +
-        '</div>' +
-        (state.section2Expanded ?
-            '<div style="margin-top: 12px;">' +
-                state.ambient.map(amb =>
-                    '<div class="slider-container" style="position: relative; background: #f9fafb; padding: 6px; border-radius: 4px; margin-bottom: 5px;">' +
-                        '<div style="display: flex; gap: 8px; align-items: flex-start; flex-wrap: wrap;">' +
-                            '<div style="flex: 1; min-width: 250px;">' +
-                                '<div style="margin-bottom: 6px;">' +
-                                    '<label class="input-label" style="font-size: 14px; margin: 0 0 6px 0; display: block;">What is on your mind or affecting your nerves?</label>' +
-                                    '<div style="display: flex; gap: 4px;">' +
-                                        '<button onclick="updateAmbient(' + amb.id + ', \'type\', \'threat\')" ' +
-                                                (amb.locked ? 'disabled' : '') + ' ' +
-                                                'style="flex: 1; padding: 6px 10px; border: 2px solid #f44336; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer; ' +
-                                                (amb.type === 'threat' ? 'background: #f44336; color: white;' : 'background: white; color: #f44336;') + ' ' +
-                                                (amb.locked ? 'opacity: 0.6; cursor: not-allowed;' : '') + '">' +
-                                            'Stressor' +
-                                        '</button>' +
-                                        '<button onclick="updateAmbient(' + amb.id + ', \'type\', \'opportunity\')" ' +
-                                                (amb.locked ? 'disabled' : '') + ' ' +
-                                                'style="flex: 1; padding: 6px 10px; border: 2px solid #4caf50; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer; ' +
-                                                (amb.type === 'opportunity' ? 'background: #4caf50; color: white;' : 'background: white; color: #4caf50;') + ' ' +
-                                                (amb.locked ? 'opacity: 0.6; cursor: not-allowed;' : '') + '">' +
-                                            'Opportunity' +
-                                        '</button>' +
-                                        '<button onclick="updateAmbient(' + amb.id + ', \'type\', \'regulated\')" ' +
-                                                (amb.locked ? 'disabled' : '') + ' ' +
-                                                'style="flex: 1; padding: 6px 10px; border: 2px solid #1976d2; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer; ' +
-                                                (amb.type === 'regulated' ? 'background: #1976d2; color: white;' : 'background: white; color: #1976d2;') + ' ' +
-                                                (amb.locked ? 'opacity: 0.6; cursor: not-allowed;' : '') + '">' +
-                                            'Stabilizer' +
-                                        '</button>' +
-                                    '</div>' +
-                                '</div>' +
-                                '<textarea oninput="updateAmbient(' + amb.id + ', \'note\', this.value)" ' +
-                                          'placeholder="Brief description..." ' +
-                                          (amb.locked ? 'disabled' : '') + ' ' +
-                                          'style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 14px; font-family: inherit; min-height: 50px; resize: vertical; ' + 
-                                          (amb.locked ? 'opacity: 0.6; cursor: not-allowed; background: #f3f4f6;' : '') + '">' + amb.note + '</textarea>' +
-                            '</div>' +
-
-                            '<div style="display: flex; gap: 8px; width: 100%;">' +
-                                '<div style="flex: 0 0 75%;">' +
-                                    '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px;">' +
-                                        '<span style="font-weight: 600; color: #111827; font-size: 14px;">Intensity/Loudness</span>' +
-                                        '<span class="slider-value" style="font-size: 18px; font-weight: bold; color: ' + (amb.type === 'threat' ? '#f44336' : amb.type === 'regulated' ? '#1976d2' : '#4caf50') + ';">' + amb.value + '</span>' +
-                                    '</div>' +
-                                    '<input type="range" min="0" max="10" value="' + amb.value + '" ' +
-                                           'oninput="updateAmbient(' + amb.id + ', \'value\', this.value)" ' +
-                                           (amb.locked ? 'disabled' : '') + ' ' +
-                                           'style="width: 100%; height: 6px; border-radius: 3px; outline: none; -webkit-appearance: none; cursor: pointer; ' +
-                                           'background: ' + getAmbientSliderGradient(amb.type) + '; ' + 
-                                           (amb.locked ? 'opacity: 0.6; cursor: not-allowed;' : '') + '">' +
-                                '</div>' +
-
-                                '<div style="display: flex; flex-direction: column; gap: 4px; align-self: center; margin-left: 10px;">' +
-                                    '<button type="button" class="btn" onclick="toggleAmbientLock(' + amb.id + ')" ' +
-                                            'style="padding: 4px 8px; font-size: 11px; white-space: nowrap; ' + (amb.locked ? 'background: #f59e0b; color: white;' : 'background: #3b82f6; color: white;') + '">' +
-                                        (amb.locked ? 'Edit' : 'Save') +
-                                    '</button>' +
-                                    '<button type="button" class="btn" onclick="deleteAmbientSlider(' + amb.id + ')" ' +
-                                            'style="padding: 4px 8px; font-size: 11px; white-space: nowrap; background: #dc2626; color: white;">' +
-                                        'Del' +
-                                    '</button>' +
-                                '</div>' +
-                            '</div>' +
-                        '</div>' +
-                    '</div>'
-                ).join('') +
-                (state.ambient.length < 6 ?
-                    '<button class="btn" onclick="addAmbientSlider()" ' +
-                            (state.ambient.some(a => !a.locked) ? 'disabled ' : '') +
-                            'style="background: ' + (state.ambient.some(a => !a.locked) ? '#d1d5db' : '#f97316') + '; color: white; width: 100%; padding: 10px; margin-top: 9px; ' + (state.ambient.some(a => !a.locked) ? 'cursor: not-allowed;' : '') + '">' +
-                        '+ Add Topic' + (state.ambient.some(a => !a.locked) ? ' (Save current sliders first)' : '') +
-                    '</button>'
-                : '<div style="text-align: center; padding: 9px; color: #6b7280; font-style: italic; font-size: 13px;">Maximum of 6 internal experiences reached</div>') +
-            '</div>'
-        : '') +
-    '</div>' +
-
     '</div>' +
 
     '<div class="card">' +
-        '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">' +
-            '<h2 style="margin: 0;">Window of Tolerance Visualization</h2>' +
-        '</div>' +
+        '<h2 style="margin-bottom: 12px;">Window of Tolerance Visualization</h2>' +
         '<div class="visualization" id="visualization">' +
             '<div class="color-legend">' +
                 '<div style="padding: 8px 4px; color: black; font-size: 8px; font-weight: bold; line-height: 1.3; text-align: center; z-index: 12; display: flex; flex-direction: column; justify-content: space-evenly; height: 100%;">' +
@@ -302,40 +196,42 @@ function renderPart2() {
                     '<div class="gate-outline-bottom"></div>' +
                 '</div>' +
             '</div>' +
-            '<div class="gate-text-top" id="gateTextTop">Stress Response<br>Level: 0</div>' +
-            '<div class="gate-text-bottom" id="gateTextBottom">OPPORTUNITY<br>0</div>' +
-            '<div class="river-text" id="riverText">Window of Tolerance Width<br>or Internal Information<br>Processing Capacity</div>' +
+            '<div class="gate-text-top" id="gateTextTop">Stress - 0%</div>' +
+            '<div class="gate-text-bottom" id="gateTextBottom">Opportunity - 0%</div>' +
+            '<div class="river-text" id="riverText">Regulated<br>Processing<br>Capacity</div>' +
         '</div>' +
     '</div>' +
 
     '<div class="card" style="border: 1px solid #16a34a;">' +
         '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">' +
-            '<div style="display: flex; align-items: center; gap: 12px;">' +
-                '<h2 style="margin: 0;">💾 Current Entry</h2>' +
-            '</div>' +
+            '<h2 style="margin: 0;">💾 Current Entry</h2>' +
             '<div style="display: flex; gap: 8px; flex-wrap: wrap;">' +
                 '<button class="btn" onclick="saveEntry()" style="background: #16a34a; color: white; white-space: nowrap; padding: 10px 20px; font-size: 14px;">💾 Save Entry</button>' +
                 '<button class="btn" onclick="resetAllSliders(); render();" style="background: #f97316; color: white; white-space: nowrap; padding: 10px 20px; font-size: 14px;">🔄 Reset Sliders</button>' +
             '</div>' +
         '</div>' +
         (state.saveError ? '<div style="color: #dc2626; margin-bottom: 12px;">' + state.saveError + '</div>' : '') +
-        '<div style="display: flex; gap: 20px;">' +
-            '<div style="flex: 1;">' +
-                '<div style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">' +
-                    'Stressor: ' + getThreatLoad() + ' | Opportunity: ' + getOpportunityLoad() + ' | Stabilizer: ' + getRegulatedLoad() +
-                '</div>' +
-                '<div style="font-size: 14px; color: #6b7280;" id="currentPercentages">' +
-                    'Calculating percentages...' +
-                '</div>' +
-            '</div>' +
+        '<div style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">' +
+            'Stressor: ' + getThreatLoad() + ' | Opportunity: ' + getOpportunityLoad() + ' | Stabilizer: ' + getRegulatedLoad() +
+        '</div>' +
+        '<div style="font-size: 14px; color: #6b7280;" id="currentPercentages">' +
+            'Calculating percentages...' +
         '</div>' +
     '</div>' +
 
     '<div class="card" style="text-align: center; padding: 12px; border: 1px solid #dc2626;">' +
-        '<button id="logoutBtn" onclick="handleLogout()" style="width: 100%; padding: 10px 20px; background: #dc2626; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; display: block;">🚪 Logout</button>' +
+        '<button onclick="handleLogout()" style="width: 100%; padding: 10px 20px; background: #dc2626; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px;">🚪 Logout</button>' +
     '</div>' +
 
     '<div class="card">' +
         '<div id="entriesContainer"></div>' +
     '</div>';
+
+document.getElementById('app').innerHTML = html;
+
+const threatLoad = getThreatLoad();
+const opportunityLoad = getOpportunityLoad();
+const regulatedLoad = getRegulatedLoad();
+setTimeout(() => updateVisualization(threatLoad, opportunityLoad, regulatedLoad), 0);
+displayEntries();
 }
