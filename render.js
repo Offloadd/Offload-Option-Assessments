@@ -175,8 +175,8 @@ displayEntries();
 // render.js - Part 2 - Specific Experiences, Visualization, Save Button
 
 function renderPart2() {
-    return // Section 2: Specific Experiences (formerly Section 4)
-    '<div class="section-card section-orange ' + (state.section2Expanded ? 'expanded' : '') + '" ' +
+    // Section 2: Specific Experiences (formerly Section 4)
+    return '<div class="section-card section-orange ' + (state.section2Expanded ? 'expanded' : '') + '" ' +
          (state.section2Expanded ? '' : 'onclick="event.stopPropagation(); toggleSection(2)"') + '>' +
         '<div class="section-header">' +
             '<div>' +
