@@ -37,20 +37,20 @@ const html =
             '</button>' +
         '</div>' +
         '<div style="margin-top: 12px;">' +
-                // Life Areas Section
-                '<div style="margin-bottom: 12px;">' +
-                    '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">' +
-                        '<h3 style="margin: 0; font-size: 16px;">Life Area (Optional)</h3>' +
-                        '<button class="btn" onclick="openLifeAreasModal()" style="background: #3b82f6; color: white; font-size: 12px;">✏️ Edit Areas</button>' +
+                // Life Areas Section - condensed
+                '<div style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; gap: 12px;">' +
+                    '<div style="font-size: 13px; color: #6b7280;">Select a Life Area (Optional)</div>' +
+                    '<div style="display: flex; gap: 8px; align-items: center;">' +
+                        '<select onchange="loadLifeArea(this.value)" style="width: auto; min-width: 150px; padding: 6px 8px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; background: white;">' +
+                            '<option value="">-- Select --</option>' +
+                            Object.keys(state.lifeAreas).filter(key => state.lifeAreas[key].visible).map(areaKey => {
+                                const area = state.lifeAreas[areaKey];
+                                const isActive = state.activeLifeArea === areaKey;
+                                return '<option value="' + areaKey + '" ' + (isActive ? 'selected' : '') + '>' + area.label + '</option>';
+                            }).join('') +
+                        '</select>' +
+                        '<button class="btn" onclick="openLifeAreasModal()" style="background: #3b82f6; color: white; font-size: 11px; padding: 6px 10px; white-space: nowrap;">✏️ Edit</button>' +
                     '</div>' +
-                    '<select onchange="loadLifeArea(this.value)" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 14px; background: white;">' +
-                        '<option value="">-- Select a life area (optional) --</option>' +
-                        Object.keys(state.lifeAreas).filter(key => state.lifeAreas[key].visible).map(areaKey => {
-                            const area = state.lifeAreas[areaKey];
-                            const isActive = state.activeLifeArea === areaKey;
-                            return '<option value="' + areaKey + '" ' + (isActive ? 'selected' : '') + '>' + area.label + '</option>';
-                        }).join('') +
-                    '</select>' +
                 '</div>' +
                 
                 // Assessment Zone
