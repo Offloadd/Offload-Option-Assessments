@@ -42,24 +42,28 @@ const html =
                 '<div style="background: ' + (state.assessmentMode === 'options' ? '#f0f9ff' : '#fff7ed') + '; border: 2px solid ' + (state.assessmentMode === 'options' ? '#3b82f6' : '#f97316') + '; border-radius: 8px; padding: 10px; margin-top: 12px;">' +
                     (state.saveError ? '<div id="saveError" style="background: #fee2e2; color: #991b1b; padding: 8px 12px; border-radius: 4px; margin-bottom: 12px; font-size: 13px; border: 1px solid #fecaca;">' + state.saveError + '</div>' : '') +
                     
-                    // Header with life area dropdown on right
-                    '<div style="display: flex; justify-content: flex-end; align-items: flex-start; margin-bottom: 12px; gap: 12px;">' +
-                        '<div style="display: flex; gap: 6px; align-items: center; flex-shrink: 0;">' +
-                            '<select onchange="loadLifeArea(this.value)" style="width: auto; min-width: 180px; padding: 6px 8px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; background: white;">' +
-                                '<option value="">Select Life Area (Optional)</option>' +
-                                Object.keys(state.lifeAreas).filter(key => state.lifeAreas[key].visible).map(areaKey => {
-                                    const area = state.lifeAreas[areaKey];
-                                    const isActive = state.activeLifeArea === areaKey;
-                                    return '<option value="' + areaKey + '" ' + (isActive ? 'selected' : '') + '>' + area.label + '</option>';
-                                }).join('') +
-                            '</select>' +
-                            '<button class="btn" onclick="openLifeAreasModal()" style="background: #3b82f6; color: white; font-size: 11px; padding: 6px 10px;">✏️</button>' +
-                        '</div>' +
-                    '</div>' +
+                    // Question label
                     '<div style="margin-bottom: 8px;">' +
-                        '<label style="display: block; font-weight: 600; margin-bottom: 4px; font-size: 14px;">' +
+                        '<label style="display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px;">' +
                             (state.assessmentMode === 'options' ? 'What specific option are you considering?' : 'What are you experiencing right now?') +
                         '</label>' +
+                    '</div>' +
+                    
+                    // Life area dropdown on right
+                    '<div style="display: flex; justify-content: flex-end; margin-bottom: 8px; gap: 6px;">' +
+                        '<select onchange="loadLifeArea(this.value)" style="width: auto; min-width: 180px; padding: 6px 8px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; background: white;">' +
+                            '<option value="">Select Life Area (Optional)</option>' +
+                            Object.keys(state.lifeAreas).filter(key => state.lifeAreas[key].visible).map(areaKey => {
+                                const area = state.lifeAreas[areaKey];
+                                const isActive = state.activeLifeArea === areaKey;
+                                return '<option value="' + areaKey + '" ' + (isActive ? 'selected' : '') + '>' + area.label + '</option>';
+                            }).join('') +
+                        '</select>' +
+                        '<button class="btn" onclick="openLifeAreasModal()" style="background: #3b82f6; color: white; font-size: 11px; padding: 6px 10px;">✏️</button>' +
+                    '</div>' +
+                    
+                    // Text input
+                    '<div style="margin-bottom: 8px;">' +
                         '<input type="text" ' +
                                'value="' + state.activeOptionText + '" ' +
                                'oninput="updateOptionText(this.value);" ' +
