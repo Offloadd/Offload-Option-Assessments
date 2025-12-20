@@ -1,6 +1,18 @@
 // render.js - Main Render Function
 
+function preserveTextareaValues() {
+    // Before re-rendering, grab current textarea values from DOM
+    const opportunityTextarea = document.getElementById('opportunityText');
+    const stressorTextarea = document.getElementById('stressorText');
+    const stabilizerTextarea = document.getElementById('stabilizerText');
+    
+    if (opportunityTextarea) state.opportunity.why = opportunityTextarea.value;
+    if (stressorTextarea) state.stressor.why = stressorTextarea.value;
+    if (stabilizerTextarea) state.stabilizer.why = stabilizerTextarea.value;
+}
+
 function render() {
+preserveTextareaValues(); // Save any text being typed before re-rendering
 const html =
 '<div class="card header" style="padding: 12px;">' +
 '<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">' +
