@@ -27,6 +27,88 @@ function validateSave() {
     return errors;
 }
 
+function addToComparison() {
+    const errors = validateSave();
+    if (errors.length > 0) {
+        state.saveError = errors.join('<br>');
+        render();
+        return;
+    }
+    
+    if (state.comparison.length >= 6) {
+        alert('Maximum of 6 options in comparison. Please save or clear some first.');
+        return;
+    }
+    
+    state.saveError = '';
+    
+    const threatLoad = getThreatLoad();
+    const opportunityLoad = getOpportunityLoad();
+    const regulatedLoad = getRegulatedLoad();
+    
+    const option = {
+        id: Date.now(),
+        lifeArea: state.activeLifeArea ? state.lifeAreas[state.activeLifeArea].label : 'General',
+        optionText: state.activeOptionText,
+        opportunity: { value: state.opportunity.value, why: state.opportunity.why },
+        stressor: { value: state.stressor.value, why: state.stressor.why },
+        stabilizer: { value: state.stabilizer.value, why: state.stabilizer.why },
+        threatLoad,
+        opportunityLoad,
+        regulatedLoad
+    };
+    
+    state.comparison.push(option);
+    resetAllSliders();
+    render();
+}
+
+function deleteFromComparison(id) {
+    state.comparison = state.comparison.filter(opt => opt.id !== id);
+    render();
+}
+
+function clearComparison() {
+    if (state.comparison.length > 0 && !confirm('Clear all options from comparison?')) {
+        return;
+    }
+    state.comparison = [];
+    render();
+}
+
+async function saveAllComparison() {
+    if (state.comparison.length === 0) {
+        alert('No options in comparison to save');
+        return;
+    }
+    
+    if (!confirm(`Save all ${state.comparison.length} options to data set?`)) {
+        return;
+    }
+    
+    for (const option of state.comparison) {
+        const entry = {
+            timestamp: new Date().toISOString(),
+            lifeArea: option.lifeArea,
+            optionText: option.optionText,
+            opportunity: option.opportunity,
+            stressor: option.stressor,
+            stabilizer: option.stabilizer,
+            threatLoad: option.threatLoad,
+            opportunityLoad: option.opportunityLoad,
+            regulatedLoad: option.regulatedLoad
+        };
+        
+        await saveToFirestore(entry);
+        state.entries.unshift(entry);
+    }
+    
+    saveToUserStorage('entries', JSON.stringify(state.entries));
+    state.comparison = [];
+    render();
+    displayEntries();
+}
+
 function resetAllSliders() {
     state.activeLifeArea = null;
     state.activeOptionText = '';
