@@ -20,6 +20,7 @@ function updateAssessment(type, value) {
     const opportunityLoad = getOpportunityLoad();
     const regulatedLoad = getRegulatedLoad();
     updateVisualization(threatLoad, opportunityLoad, regulatedLoad);
+    // Don't call render() here - it wipes out textarea content while typing
 }
 
 function updateAssessmentText(type, text) {
