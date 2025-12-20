@@ -115,9 +115,10 @@ const html =
                                'oninput="updateAssessmentText(\'stabilizer\', this.value)">' + state.stabilizer.why + '</textarea>' +
                     '</div>' +
                     
-                    // Save button
-                    '<div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb;">' +
-                        '<button class="btn" onclick="saveEntry()" style="width: 100%; padding: 12px; background: #16a34a; color: white; font-size: 15px; font-weight: 600;">💾 Save to Data Set & Clear Sliders</button>' +
+                    // Buttons
+                    '<div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb; display: flex; gap: 8px;">' +
+                        '<button class="btn" onclick="addToComparison()" style="flex: 1; padding: 12px; background: #3b82f6; color: white; font-size: 15px; font-weight: 600;">➕ Add to Comparison</button>' +
+                        '<button class="btn" onclick="resetAllSliders(); render();" style="flex: 1; padding: 12px; background: #6b7280; color: white; font-size: 15px; font-weight: 600;">🔄 Clear Sliders</button>' +
                     '</div>' +
                 '</div>' +
             '</div>'
@@ -165,21 +166,50 @@ const html =
         '</div>' +
     '</div>' +
 
-    '<div class="card" style="border: 1px solid #16a34a;">' +
-        '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">' +
-            '<h2 style="margin: 0;">💾 Current Entry</h2>' +
-            '<div style="display: flex; gap: 8px; flex-wrap: wrap;">' +
-                '<button class="btn" onclick="saveEntry()" style="background: #16a34a; color: white; white-space: nowrap; padding: 10px 20px; font-size: 14px;">💾 Save Entry</button>' +
-                '<button class="btn" onclick="resetAllSliders(); render();" style="background: #f97316; color: white; white-space: nowrap; padding: 10px 20px; font-size: 14px;">🔄 Reset Sliders</button>' +
+    '<div class="card">' +
+        '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">' +
+            '<h2 style="margin: 0;">⚖️ Option Comparison (' + state.comparison.length + '/6)</h2>' +
+            (state.comparison.length > 0 ? 
+                '<button class="btn" onclick="clearComparison()" style="background: #dc2626; color: white; padding: 8px 16px;">🗑️ Clear All</button>' 
+            : '') +
+        '</div>' +
+        (state.comparison.length === 0 ?
+            '<p style="color: #6b7280; text-align: center; padding: 20px;">No options in comparison yet. Add options above to compare them.</p>'
+        :
+            '<div style="margin-bottom: 16px;">' +
+                state.comparison.map(opt => {
+                    const height = 300;
+                    const maxLoad = 50;
+                    const minGateHeight = 30;
+                    const regulatedReduction = opt.regulatedLoad * 2;
+                    let topGateHeight = minGateHeight + Math.max(0, Math.min((opt.threatLoad / maxLoad) * height * 1.8, height * 0.9) - regulatedReduction);
+                    let bottomGateHeight = minGateHeight + Math.max(0, Math.min((opt.opportunityLoad / maxLoad) * height * 1.8, height * 0.9) - regulatedReduction);
+                    const combinedHeight = topGateHeight + bottomGateHeight;
+                    const maxCombined = height * 0.9;
+                    if (combinedHeight > maxCombined) {
+                        const scaleFactor = maxCombined / combinedHeight;
+                        topGateHeight = Math.max(minGateHeight, topGateHeight * scaleFactor);
+                        bottomGateHeight = Math.max(minGateHeight, bottomGateHeight * scaleFactor);
+                    }
+                    const availableSpace = height - topGateHeight - bottomGateHeight;
+                    const stressPercent = Math.round((topGateHeight / height) * 100);
+                    const regulatedPercent = Math.round((availableSpace / height) * 100);
+                    const opportunityPercent = Math.round((bottomGateHeight / height) * 100);
+                    
+                    return '<div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px; margin-bottom: 8px;">' +
+                        '<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">' +
+                            '<div style="flex: 1;">' +
+                                '<div style="font-weight: 600; color: #111827; margin-bottom: 4px;"><strong>' + opt.lifeArea + ':</strong> ' + opt.optionText + '</div>' +
+                                '<div style="font-size: 13px; color: #6b7280;">Stress: ' + stressPercent + '% | Regulated: ' + regulatedPercent + '% | Opportunity: ' + opportunityPercent + '%</div>' +
+                                '<div style="font-size: 12px; color: #9ca3af; margin-top: 2px;">Stressor: ' + opt.threatLoad + ' | Stabilizer: ' + opt.regulatedLoad + ' | Opportunity: ' + opt.opportunityLoad + '</div>' +
+                            '</div>' +
+                            '<button onclick="deleteFromComparison(' + opt.id + ')" style="padding: 6px 12px; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; white-space: nowrap;">Delete</button>' +
+                        '</div>' +
+                    '</div>';
+                }).join('') +
             '</div>' +
-        '</div>' +
-        (state.saveError ? '<div style="color: #dc2626; margin-bottom: 12px;">' + state.saveError + '</div>' : '') +
-        '<div style="font-size: 14px; font-weight: 600; margin-bottom: 8px;">' +
-            'Stressor: ' + getThreatLoad() + ' | Opportunity: ' + getOpportunityLoad() + ' | Stabilizer: ' + getRegulatedLoad() +
-        '</div>' +
-        '<div style="font-size: 14px; color: #6b7280;" id="currentPercentages">' +
-            'Calculating percentages...' +
-        '</div>' +
+            '<button class="btn" onclick="saveAllComparison()" style="width: 100%; padding: 12px; background: #16a34a; color: white; font-size: 15px; font-weight: 600;">💾 Save All to Data Set</button>'
+        ) +
     '</div>' +
 
     '<div class="card" style="text-align: center; padding: 12px; border: 1px solid #dc2626;">' +
