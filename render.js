@@ -14,20 +14,17 @@ const html =
 
     '<div class="sections-grid">' +
 
-    // Section 1: Option Assessment
-    '<div class="section-card section-green ' + (state.section1Expanded ? 'expanded' : '') + '" ' +
-         (state.section1Expanded ? '' : 'onclick="event.stopPropagation(); toggleSection(1)"') + '>' +
+    // Section 1: Option Assessment / Capture Mode
+    '<div class="section-card ' + (state.assessmentMode === 'options' ? 'section-green' : 'section-orange') + ' expanded">' +
         '<div class="section-header">' +
             '<div>' +
-                '<div class="section-title">1. Option Assessment</div>' +
-                (state.section1Expanded ? '' : '<div class="section-subtitle">What decision am I considering?</div>') +
+                '<div class="section-title">1. ' + (state.assessmentMode === 'options' ? 'Option Assessment' : 'Capture Mode') + '</div>' +
             '</div>' +
-            '<button class="expand-btn" onclick="event.stopPropagation(); toggleSection(1)" style="background: #16a34a;">' +
-                (state.section1Expanded ? 'Hide ▲' : 'Show ▼') +
+            '<button class="btn" onclick="toggleMode()" style="background: ' + (state.assessmentMode === 'options' ? '#f97316' : '#16a34a') + '; color: white; padding: 6px 12px; font-size: 12px;">' +
+                '🔄 Switch to ' + (state.assessmentMode === 'options' ? 'Capture' : 'Options') + ' Mode' +
             '</button>' +
         '</div>' +
-        (state.section1Expanded ?
-            '<div style="margin-top: 12px;">' +
+        '<div style="margin-top: 12px;">' +
                 // Life Areas Section
                 '<div style="margin-bottom: 12px;">' +
                     '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">' +
@@ -45,18 +42,33 @@ const html =
                 '</div>' +
                 
                 // Assessment Zone
-                '<div style="background: #f0f9ff; border: 2px solid #3b82f6; border-radius: 8px; padding: 10px; margin-top: 12px;">' +
+                '<div style="background: ' + (state.assessmentMode === 'options' ? '#f0f9ff' : '#fff7ed') + '; border: 2px solid ' + (state.assessmentMode === 'options' ? '#3b82f6' : '#f97316') + '; border-radius: 8px; padding: 10px; margin-top: 12px;">' +
                     '<h3 style="margin-bottom: 12px; font-size: 16px;">' + 
-                        (state.activeLifeArea ? '🎯 Assessing: ' + state.lifeAreas[state.activeLifeArea].label : 'Select a Life Area to Begin Assessment') +
+                        (state.activeLifeArea ? '🎯 Assessing: ' + state.lifeAreas[state.activeLifeArea].label : (state.assessmentMode === 'options' ? 'Select a Life Area (Optional)' : 'Capture Experience')) +
                     '</h3>' +
                     '<div style="margin-bottom: 8px;">' +
-                        '<label style="display: block; font-weight: 600; margin-bottom: 4px; font-size: 14px;">What specific option are you considering?</label>' +
+                        '<label style="display: block; font-weight: 600; margin-bottom: 4px; font-size: 14px;">' +
+                            (state.assessmentMode === 'options' ? 'What specific option are you considering?' : 'What are you experiencing right now?') +
+                        '</label>' +
                         '<input type="text" ' +
                                'value="' + state.activeOptionText + '" ' +
                                'oninput="updateOptionText(this.value);" ' +
-                               'placeholder="e.g., Accept new project offer, or just describe what\'s on your mind" ' +
+                               'placeholder="' + (state.assessmentMode === 'options' ? 'e.g., Accept new project offer' : 'e.g., Feeling urge to start another project immediately') + '" ' +
                                'style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 14px;">' +
                     '</div>' +
+                    
+                    // Hijacking dropdown (only in capture mode)
+                    (state.assessmentMode === 'capture' ?
+                        '<div style="margin-bottom: 8px;">' +
+                            '<label style="display: block; font-weight: 600; margin-bottom: 4px; font-size: 13px; color: #f97316;">Could this be a hijacking event?</label>' +
+                            '<select onchange="state.hijackingEvent = this.value" style="width: 100%; padding: 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; background: white;">' +
+                                '<option value="" ' + (state.hijackingEvent === '' ? 'selected' : '') + '>-- Select --</option>' +
+                                '<option value="yes" ' + (state.hijackingEvent === 'yes' ? 'selected' : '') + '>Yes</option>' +
+                                '<option value="maybe" ' + (state.hijackingEvent === 'maybe' ? 'selected' : '') + '>Maybe</option>' +
+                                '<option value="no" ' + (state.hijackingEvent === 'no' ? 'selected' : '') + '>No</option>' +
+                            '</select>' +
+                        '</div>'
+                    : '') +
                     
                     // Opportunity slider
                     '<div class="slider-group" style="margin-bottom: 5px;">' +
@@ -115,14 +127,20 @@ const html =
                                'oninput="updateAssessmentText(\'stabilizer\', this.value)">' + state.stabilizer.why + '</textarea>' +
                     '</div>' +
                     
-                    // Buttons
-                    '<div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb; display: flex; gap: 8px;">' +
-                        '<button class="btn" onclick="addToComparison()" style="flex: 1; padding: 12px; background: #3b82f6; color: white; font-size: 15px; font-weight: 600;">➕ Add to Comparison</button>' +
-                        '<button class="btn" onclick="resetAllSliders(); render();" style="flex: 1; padding: 12px; background: #6b7280; color: white; font-size: 15px; font-weight: 600;">🔄 Clear Sliders</button>' +
-                    '</div>' +
+                    // Buttons - different for each mode
+                    (state.assessmentMode === 'options' ?
+                        '<div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb; display: flex; gap: 8px;">' +
+                            '<button class="btn" onclick="addToComparison()" style="flex: 1; padding: 12px; background: #3b82f6; color: white; font-size: 15px; font-weight: 600;">➕ Add to Comparison</button>' +
+                            '<button class="btn" onclick="resetAllSliders(); render();" style="flex: 1; padding: 12px; background: #6b7280; color: white; font-size: 15px; font-weight: 600;">🔄 Clear Sliders</button>' +
+                        '</div>'
+                    :
+                        '<div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb; display: flex; gap: 8px;">' +
+                            '<button class="btn" onclick="saveToCapturedExperiences()" style="flex: 1; padding: 12px; background: #f97316; color: white; font-size: 15px; font-weight: 600;">💾 Save to Captured Experiences</button>' +
+                            '<button class="btn" onclick="resetAllSliders(); render();" style="flex: 1; padding: 12px; background: #6b7280; color: white; font-size: 15px; font-weight: 600;">🔄 Clear Sliders</button>' +
+                        '</div>'
+                    ) +
                 '</div>' +
-            '</div>'
-        : '') +
+            '</div>' +
     '</div>' +
 
     '</div>' +
