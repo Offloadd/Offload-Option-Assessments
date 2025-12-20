@@ -89,6 +89,7 @@ async function saveAllComparison() {
     for (const option of state.comparison) {
         const entry = {
             timestamp: new Date().toISOString(),
+            mode: 'Options',
             lifeArea: option.lifeArea,
             optionText: option.optionText,
             opportunity: option.opportunity,
@@ -109,9 +110,50 @@ async function saveAllComparison() {
     displayEntries();
 }
 
+async function saveToCapturedExperiences() {
+    const errors = validateSave();
+    if (errors.length > 0) {
+        state.saveError = errors.join('<br>');
+        render();
+        return;
+    }
+
+    state.saveError = '';
+
+    const threatLoad = getThreatLoad();
+    const opportunityLoad = getOpportunityLoad();
+    const regulatedLoad = getRegulatedLoad();
+
+    const entry = {
+        timestamp: new Date().toISOString(),
+        mode: 'Capture',
+        hijackingEvent: state.hijackingEvent || 'not specified',
+        lifeArea: state.activeLifeArea ? state.lifeAreas[state.activeLifeArea].label : 'General',
+        optionText: state.activeOptionText,
+        opportunity: { value: state.opportunity.value, why: state.opportunity.why },
+        stressor: { value: state.stressor.value, why: state.stressor.why },
+        stabilizer: { value: state.stabilizer.value, why: state.stabilizer.why },
+        threatLoad,
+        opportunityLoad,
+        regulatedLoad
+    };
+
+    await saveToFirestore(entry);
+    
+    state.entries.unshift(entry);
+    saveToUserStorage('entries', JSON.stringify(state.entries));
+
+    // RESET ALL SLIDERS after saving
+    resetAllSliders();
+
+    render();
+    displayEntries();
+}
+
 function resetAllSliders() {
     state.activeLifeArea = null;
     state.activeOptionText = '';
+    state.hijackingEvent = '';
     state.opportunity = { value: 0, why: '' };
     state.stressor = { value: 0, why: '' };
     state.stabilizer = { value: 0, why: '' };
