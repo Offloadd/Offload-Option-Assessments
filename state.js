@@ -20,6 +20,9 @@ const state = {
         learning: { label: 'Learning/Growth', visible: true, custom: false }
     },
     
+    // Comparison area - temporary holding for options
+    comparison: [],
+    
     entries: [],
     saveError: ''
 };
