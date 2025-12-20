@@ -43,10 +43,7 @@ const html =
                     (state.saveError ? '<div id="saveError" style="background: #fee2e2; color: #991b1b; padding: 8px 12px; border-radius: 4px; margin-bottom: 12px; font-size: 13px; border: 1px solid #fecaca;">' + state.saveError + '</div>' : '') +
                     
                     // Header with life area dropdown on right
-                    '<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; gap: 12px;">' +
-                        '<h3 style="margin: 0; font-size: 16px;">' + 
-                            (state.activeLifeArea ? '🎯 Assessing: ' + state.lifeAreas[state.activeLifeArea].label : (state.assessmentMode === 'options' ? 'Select a Life Area (Optional)' : 'Capture Experience')) +
-                        '</h3>' +
+                    '<div style="display: flex; justify-content: flex-end; align-items: flex-start; margin-bottom: 12px; gap: 12px;">' +
                         '<div style="display: flex; gap: 6px; align-items: center; flex-shrink: 0;">' +
                             '<select onchange="loadLifeArea(this.value)" style="width: auto; min-width: 180px; padding: 6px 8px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; background: white;">' +
                                 '<option value="">Select Life Area (Optional)</option>' +
