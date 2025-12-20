@@ -54,7 +54,7 @@ const html =
                         '<input type="text" ' +
                                'value="' + state.activeOptionText + '" ' +
                                'oninput="updateOptionText(this.value);" ' +
-                               'placeholder="e.g., Accept Isaac\'s excavation project, or just describe what\'s on your mind" ' +
+                               'placeholder="e.g., Accept new project offer, or just describe what\'s on your mind" ' +
                                'style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 14px;">' +
                     '</div>' +
                     
