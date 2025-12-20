@@ -3,10 +3,12 @@
 const state = {
     section1Expanded: true,  // Option Assessment - start expanded
     visualOpacity: 0,
+    assessmentMode: 'options', // 'options' or 'capture'
     
     // Option Assessment state
     activeLifeArea: null,
     activeOptionText: '',
+    hijackingEvent: '',  // 'yes', 'no', 'maybe', or '' (for options mode)
     opportunity: { value: 0, why: '' },
     stressor: { value: 0, why: '' },
     stabilizer: { value: 0, why: '' },
@@ -29,6 +31,12 @@ const state = {
 
 function toggleSection(section) {
     if (section === 1) state.section1Expanded = !state.section1Expanded;
+    render();
+}
+
+function toggleMode() {
+    state.assessmentMode = state.assessmentMode === 'options' ? 'capture' : 'options';
+    state.hijackingEvent = ''; // Reset hijacking selection when switching modes
     render();
 }
 
