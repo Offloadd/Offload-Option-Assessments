@@ -55,6 +55,7 @@ const html =
                 
                 // Assessment Zone
                 '<div style="background: ' + (state.assessmentMode === 'options' ? '#f0f9ff' : '#fff7ed') + '; border: 2px solid ' + (state.assessmentMode === 'options' ? '#3b82f6' : '#f97316') + '; border-radius: 8px; padding: 10px; margin-top: 12px;">' +
+                    (state.saveError ? '<div id="saveError" style="background: #fee2e2; color: #991b1b; padding: 8px 12px; border-radius: 4px; margin-bottom: 12px; font-size: 13px; border: 1px solid #fecaca;">' + state.saveError + '</div>' : '') +
                     '<h3 style="margin-bottom: 12px; font-size: 16px;">' + 
                         (state.activeLifeArea ? '🎯 Assessing: ' + state.lifeAreas[state.activeLifeArea].label : (state.assessmentMode === 'options' ? 'Select a Life Area (Optional)' : 'Capture Experience')) +
                     '</h3>' +
