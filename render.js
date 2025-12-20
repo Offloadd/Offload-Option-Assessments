@@ -27,7 +27,7 @@ const html =
     '<div class="sections-grid">' +
 
     // Section 1: Option Assessment / Capture Mode
-    '<div class="section-card ' + (state.assessmentMode === 'options' ? 'section-green' : 'section-orange') + ' expanded">' +
+    '<div class="section-card ' + (state.assessmentMode === 'options' ? 'section-green' : 'section-orange') + ' expanded" style="border-left: none; padding: 8px;">' +
         '<div class="section-header">' +
             '<div>' +
                 '<div class="section-title">1. ' + (state.assessmentMode === 'options' ? 'Option Assessment' : 'Capture Mode') + '</div>' +
