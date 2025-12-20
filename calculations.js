@@ -32,6 +32,10 @@ function addToComparison() {
     if (errors.length > 0) {
         state.saveError = errors.join('<br>');
         render();
+        setTimeout(() => {
+            const errorDiv = document.getElementById('saveError');
+            if (errorDiv) errorDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
         return;
     }
     
@@ -115,6 +119,10 @@ async function saveToCapturedExperiences() {
     if (errors.length > 0) {
         state.saveError = errors.join('<br>');
         render();
+        setTimeout(() => {
+            const errorDiv = document.getElementById('saveError');
+            if (errorDiv) errorDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
         return;
     }
 
