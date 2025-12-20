@@ -594,4 +594,27 @@ textarea {
         padding: 4px 8px;
         font-size: 12px;
     }
+    
+    /* Mobile fixes for assessment zone */
+    .card select {
+        max-width: 100% !important;
+        min-width: 100px !important;
+    }
+    
+    /* Fix slider groups on mobile */
+    .slider-group > div {
+        flex-wrap: wrap !important;
+    }
+    
+    /* Make slider container use full width */
+    .slider-group {
+        max-width: 100%;
+        overflow: hidden;
+    }
+    
+    /* Ensure nothing causes horizontal scroll */
+    body, .container, .card {
+        max-width: 100vw;
+        overflow-x: hidden;
+    }
 }
