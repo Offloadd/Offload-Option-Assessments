@@ -68,7 +68,16 @@ function renderEntry(entry, index) {
     // Build option assessment display
     const optionHtml = `
         <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb;">
-            <div style="font-weight: 600; color: #374151; margin-bottom: 6px; font-size: 14px;">Option Assessed:</div>
+            <div style="font-weight: 600; color: #374151; margin-bottom: 6px; font-size: 14px;">
+                ${entry.mode === 'Capture' ? '📸 Captured Experience' : '⚖️ Option Assessed'}:
+                ${entry.mode === 'Capture' && entry.hijackingEvent ? 
+                    '<span style="margin-left: 8px; padding: 2px 8px; background: ' + 
+                    (entry.hijackingEvent === 'yes' ? '#fee2e2' : entry.hijackingEvent === 'maybe' ? '#fef3c7' : '#e0f2fe') + 
+                    '; color: ' + 
+                    (entry.hijackingEvent === 'yes' ? '#991b1b' : entry.hijackingEvent === 'maybe' ? '#92400e' : '#075985') + 
+                    '; border-radius: 4px; font-size: 11px; font-weight: 600;">Hijacking: ' + entry.hijackingEvent + '</span>' 
+                : ''}
+            </div>
             <div style="font-size: 13px; color: #4b5563; margin-bottom: 4px;">
                 <strong>${lifeArea}:</strong> ${optionText}
             </div>
