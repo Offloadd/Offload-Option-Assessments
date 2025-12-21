@@ -52,6 +52,7 @@ function addToComparison() {
     
     const option = {
         id: Date.now(),
+        topicLabel: state.topicLabel || 'Unlabeled',
         lifeArea: state.activeLifeArea ? state.lifeAreas[state.activeLifeArea].label : 'General',
         optionText: state.activeOptionText,
         opportunity: { value: state.opportunity.value, why: state.opportunity.why },
@@ -89,6 +90,7 @@ function loadComparisonOption(id) {
     
     // Load option data into sliders (read-only for now - could add edit later)
     state.activeLifeArea = Object.keys(state.lifeAreas).find(key => state.lifeAreas[key].label === option.lifeArea);
+    state.topicLabel = option.topicLabel;
     state.activeOptionText = option.optionText;
     state.opportunity = option.opportunity;
     state.stressor = option.stressor;
@@ -183,6 +185,7 @@ async function saveToCapturedExperiences() {
 
 function resetAllSliders() {
     state.activeLifeArea = null;
+    state.topicLabel = '';
     state.activeOptionText = '';
     state.hijackingEvent = '';
     state.opportunity = { value: 0, why: '' };
