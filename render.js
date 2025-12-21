@@ -36,16 +36,14 @@ const html =
                 '🔄 Switch to ' + (state.assessmentMode === 'options' ? 'Capture' : 'Options') + ' Mode' +
             '</button>' +
         '</div>' +
-        (state.assessmentMode === 'options' ? 
-            // Container: sliders left (70%), comparison right (30%)
-            '<div style="display: flex; gap: 12px; margin-top: 12px;">' +
-                // Left: Assessment Zone
-                '<div style="flex: 0 0 70%; min-width: 0;">' +
-                    '<div style="background: #f0f9ff; border: 2px solid #3b82f6; border-radius: 8px; padding: 10px;">'
-        :
-            '<div style="margin-top: 12px;">' +
-                '<div style="background: #fff7ed; border: 2px solid #f97316; border-radius: 8px; padding: 10px;">'
-        ) +
+        '<div style="margin-top: 12px;">' +
+                
+                // Flex container for side-by-side layout (options mode only)
+                (state.assessmentMode === 'options' ? '<div style="display: flex; gap: 12px;">' : '') +
+                
+                // Assessment Zone (70% in options mode, full width in capture mode)
+                '<div style="' + (state.assessmentMode === 'options' ? 'flex: 0 0 70%;' : '') + '">' +
+                    '<div style="background: ' + (state.assessmentMode === 'options' ? '#f0f9ff' : '#fff7ed') + '; border: 2px solid ' + (state.assessmentMode === 'options' ? '#3b82f6' : '#f97316') + '; border-radius: 8px; padding: 10px;">' +
                     (state.saveError ? '<div id="saveError" style="background: #fee2e2; color: #991b1b; padding: 8px 12px; border-radius: 4px; margin-bottom: 12px; font-size: 13px; border: 1px solid #fecaca;">' + state.saveError + '</div>' : '') +
                     
                     // Question label - same size as title
@@ -171,13 +169,15 @@ const html =
                         '</div>'
                     ) +
                 '</div>' +
+            '</div>' +
             
+            // Comparison list (options mode only, positioned to right)
             (state.assessmentMode === 'options' ?
                 // Close assessment zone div
                 '</div>' +
                 
                 // Comparison list below sliders (30% width)
-                '<div style="width: 30%; min-width: 250px; margin-top: 12px;">' +
+                '<div style="flex: 0 0 30%;">' +
                     '<div style="background: #f0f9ff; border: 2px solid #3b82f6; border-radius: 8px; padding: 10px;">' +
                         '<div style="display: flex; gap: 6px; margin-bottom: 12px; justify-content: center;">' +
                             '<button class="btn" onclick="saveAllComparison()" style="background: #16a34a; color: white; padding: 6px 8px; font-size: 11px; white-space: nowrap;">💾 Save All</button>' +
@@ -216,6 +216,7 @@ const html =
                         ) +
                     '</div>' +
                 '</div>' +
+                '</div>' // Close flex container
             : '') +
     '</div>' +
 
