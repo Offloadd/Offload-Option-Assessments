@@ -109,6 +109,11 @@ body {
     align-items: stretch !important;
 }
 
+/* Prevent comparison list from wrapping below */
+.section-card > div > div[style*="display: flex; gap: 12px"] > div {
+    flex-shrink: 0 !important;
+}
+
 .section-green { border-left: 4px solid #16a34a; }
 .section-orange { border-left: 4px solid #f97316; }
 
