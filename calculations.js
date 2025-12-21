@@ -161,6 +161,7 @@ async function saveToCapturedExperiences() {
         timestamp: new Date().toISOString(),
         mode: 'Capture',
         hijackingEvent: state.hijackingEvent || 'not specified',
+        topicLabel: state.topicLabel || 'Unlabeled',
         lifeArea: state.activeLifeArea ? state.lifeAreas[state.activeLifeArea].label : 'General',
         optionText: state.activeOptionText,
         opportunity: { value: state.opportunity.value, why: state.opportunity.why },
