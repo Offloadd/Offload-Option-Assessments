@@ -170,9 +170,9 @@ const html =
                 // Right column: Comparison list
                 '<div style="flex: 0 0 30%; min-width: 0; display: flex; flex-direction: column;">' +
                     '<div style="background: #f0f9ff; border: 2px solid #3b82f6; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; height: 100%;">' +
-                        '<div style="display: flex; gap: 6px; margin-bottom: 12px;">' +
-                            '<button class="btn" onclick="saveAllComparison()" style="flex: 1; background: #16a34a; color: white; padding: 6px; font-size: 11px; white-space: nowrap;">💾 Save All</button>' +
-                            '<button class="btn" onclick="clearComparison()" style="flex: 1; background: #dc2626; color: white; padding: 6px; font-size: 11px; white-space: nowrap;">🗑️ Clear</button>' +
+                        '<div style="display: flex; gap: 6px; margin-bottom: 12px; justify-content: center;">' +
+                            '<button class="btn" onclick="saveAllComparison()" style="background: #16a34a; color: white; padding: 6px 8px; font-size: 11px; white-space: nowrap;">💾 Save All</button>' +
+                            '<button class="btn" onclick="clearComparison()" style="background: #dc2626; color: white; padding: 6px 8px; font-size: 11px; white-space: nowrap;">🗑️ Clear</button>' +
                         '</div>' +
                         '<div style="font-weight: 600; font-size: 13px; margin-bottom: 8px; color: #374151;">Options (' + state.comparison.length + '/6)</div>' +
                         (state.comparison.length === 0 ?
