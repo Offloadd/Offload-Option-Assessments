@@ -525,7 +525,6 @@ textarea {
 }
 
 /* Mobile Responsive Styles */
-/* TEMPORARILY DISABLED TO DEBUG FLEX LAYOUT
 @media (max-width: 768px) {
     body {
         padding: 8px;
@@ -646,4 +645,3 @@ textarea {
         padding: 12px !important;
     }
 }
-END DISABLED MOBILE MEDIA QUERY */
