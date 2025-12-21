@@ -215,6 +215,7 @@ const html =
                 '</div>' +
                 '</div>' // Close flex container
             : '') +
+            '</div>' + // Close margin-top wrapper
     '</div>' +
 
     '</div>' +
