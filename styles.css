@@ -619,6 +619,11 @@ textarea {
         box-sizing: border-box !important;
     }
     
+    /* EXCEPT when it's in the side-by-side flex layout */
+    .section-card > div > div[style*="display: flex; gap: 12px"] > div > div[style*="border: 2px solid"] {
+        max-width: none !important;
+    }
+    
     /* Stack assessment header on mobile */
     .section-card h3 {
         font-size: 14px !important;
