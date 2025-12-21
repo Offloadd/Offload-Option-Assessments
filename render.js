@@ -39,7 +39,7 @@ const html =
         '<div style="margin-top: 12px;">' +
                 
                 // Flex container for side-by-side layout (options mode only)
-                (state.assessmentMode === 'options' ? '<div style="display: flex !important; flex-wrap: nowrap !important; gap: 8px; align-items: flex-start;">' : '') +
+                (state.assessmentMode === 'options' ? '<div style="display: flex !important; flex-wrap: nowrap !important; gap: 8px; align-items: flex-end;">' : '') +
                 
                 // Assessment Zone (68% in options mode, full width in capture mode)
                 '<div style="' + (state.assessmentMode === 'options' ? 'flex: 0 0 68% !important; max-width: 68% !important; min-width: 0;' : '') + '">' +
