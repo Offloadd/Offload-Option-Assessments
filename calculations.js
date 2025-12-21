@@ -77,6 +77,29 @@ function clearComparison() {
         return;
     }
     state.comparison = [];
+    state.selectedComparisonId = null;
+    render();
+}
+
+function loadComparisonOption(id) {
+    const option = state.comparison.find(opt => opt.id === id);
+    if (!option) return;
+    
+    state.selectedComparisonId = id;
+    
+    // Load option data into sliders (read-only for now - could add edit later)
+    state.activeLifeArea = Object.keys(state.lifeAreas).find(key => state.lifeAreas[key].label === option.lifeArea);
+    state.activeOptionText = option.optionText;
+    state.opportunity = option.opportunity;
+    state.stressor = option.stressor;
+    state.stabilizer = option.stabilizer;
+    
+    // Update visualization
+    const threatLoad = getThreatLoad();
+    const opportunityLoad = getOpportunityLoad();
+    const regulatedLoad = getRegulatedLoad();
+    updateVisualization(threatLoad, opportunityLoad, regulatedLoad);
+    
     render();
 }
 
