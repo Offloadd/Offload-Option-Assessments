@@ -102,6 +102,13 @@ body {
     margin-bottom: 12px;
 }
 
+/* Allow side-by-side layout for options mode */
+.section-card > div > div[style*="display: flex; gap: 12px"] {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+}
+
 .section-green { border-left: 4px solid #16a34a; }
 .section-orange { border-left: 4px solid #f97316; }
 
