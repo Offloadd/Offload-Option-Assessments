@@ -68,13 +68,24 @@ const html =
                         '<button class="btn" onclick="openLifeAreasModal()" style="background: #3b82f6; color: white; font-size: 11px; padding: 6px 10px;">✏️</button>' +
                     '</div>' +
                     
-                    // Text input
-                    '<div style="margin-bottom: 8px;">' +
-                        '<input type="text" ' +
-                               'value="' + state.activeOptionText + '" ' +
-                               'oninput="updateOptionText(this.value);" ' +
-                               'placeholder="' + (state.assessmentMode === 'options' ? 'e.g., Accept new project offer' : 'e.g., Feeling urge to start another project immediately') + '" ' +
-                               'style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 14px;">' +
+                    // Topic label and main text boxes side by side
+                    '<div style="margin-bottom: 8px; display: flex; gap: 8px;">' +
+                        '<div style="flex: 0 0 20%;">' +
+                            '<label style="display: block; font-weight: 600; margin-bottom: 4px; font-size: 12px;">Topic Label</label>' +
+                            '<input type="text" ' +
+                                   'value="' + (state.topicLabel || '') + '" ' +
+                                   'oninput="state.topicLabel = this.value;" ' +
+                                   'placeholder="e.g., Tool work" ' +
+                                   'style="width: 100%; padding: 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px;">' +
+                        '</div>' +
+                        '<div style="flex: 1;">' +
+                            '<label style="display: block; font-weight: 600; margin-bottom: 4px; font-size: 12px;">Details</label>' +
+                            '<input type="text" ' +
+                                   'value="' + state.activeOptionText + '" ' +
+                                   'oninput="updateOptionText(this.value);" ' +
+                                   'placeholder="' + (state.assessmentMode === 'options' ? 'e.g., Accept new project offer' : 'e.g., Feeling urge to start another project immediately') + '" ' +
+                                   'style="width: 100%; padding: 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px;">' +
+                        '</div>' +
                     '</div>' +
                     
                     // Hijacking dropdown (only in capture mode)
@@ -164,12 +175,10 @@ const html =
             (state.assessmentMode === 'options' ?
                 // Close assessment zone div
                 '</div>' +
-                // End left column
-                '</div>' +
                 
-                // Right column: Comparison list
-                '<div style="flex: 0 0 30%; min-width: 0; display: flex; flex-direction: column;">' +
-                    '<div style="background: #f0f9ff; border: 2px solid #3b82f6; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; height: 100%;">' +
+                // Comparison list below sliders (30% width)
+                '<div style="width: 30%; min-width: 250px; margin-top: 12px;">' +
+                    '<div style="background: #f0f9ff; border: 2px solid #3b82f6; border-radius: 8px; padding: 10px;">' +
                         '<div style="display: flex; gap: 6px; margin-bottom: 12px; justify-content: center;">' +
                             '<button class="btn" onclick="saveAllComparison()" style="background: #16a34a; color: white; padding: 6px 8px; font-size: 11px; white-space: nowrap;">💾 Save All</button>' +
                             '<button class="btn" onclick="clearComparison()" style="background: #dc2626; color: white; padding: 6px 8px; font-size: 11px; white-space: nowrap;">🗑️ Clear</button>' +
@@ -200,16 +209,13 @@ const html =
                                     
                                     return '<div onclick="loadComparisonOption(' + opt.id + ')" style="background: white; border: 1px solid #e5e7eb; border-radius: 6px; padding: 8px; margin-bottom: 6px; cursor: pointer; position: relative; ' + (state.selectedComparisonId === opt.id ? 'border-color: #3b82f6; border-width: 2px;' : '') + '">' +
                                         '<button onclick="event.stopPropagation(); deleteFromComparison(' + opt.id + ')" style="position: absolute; top: 4px; right: 4px; background: #ef4444; color: white; border: none; border-radius: 3px; width: 20px; height: 20px; font-size: 14px; line-height: 1; cursor: pointer; padding: 0;">×</button>' +
-                                        '<div style="font-weight: 600; font-size: 11px; color: #111827; margin-bottom: 4px; padding-right: 24px;">' + opt.lifeArea + '</div>' +
-                                        '<div style="font-size: 10px; color: #6b7280; margin-bottom: 4px; line-height: 1.3;">' + opt.optionText.substring(0, 40) + (opt.optionText.length > 40 ? '...' : '') + '</div>' +
-                                        '<div style="font-size: 10px; color: #6b7280;">S:' + stressPercent + '% R:' + regulatedPercent + '% O:' + opportunityPercent + '%</div>' +
+                                        '<div style="font-weight: 600; font-size: 12px; color: #111827; padding-right: 24px;">' + (opt.topicLabel || 'Unlabeled') + '</div>' +
                                     '</div>';
                                 }).join('') +
                             '</div>'
                         ) +
                     '</div>' +
                 '</div>' +
-                '</div>' // Close flex container
             : '') +
     '</div>' +
 
