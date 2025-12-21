@@ -15,8 +15,8 @@ function getRegulatedLoad() {
 function validateSave() {
     const errors = [];
     
-    if (!state.activeOptionText.trim()) {
-        errors.push('Please describe what you\'re considering in the text field');
+    if (!state.topicLabel || !state.topicLabel.trim()) {
+        errors.push('Please enter a Topic Label');
     }
     
     const hasData = state.opportunity.value > 0 || state.stressor.value > 0 || state.stabilizer.value > 0;
