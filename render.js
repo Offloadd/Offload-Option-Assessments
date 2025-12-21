@@ -30,7 +30,7 @@ const html =
     '<div class="section-card ' + (state.assessmentMode === 'options' ? 'section-green' : 'section-orange') + ' expanded" style="border-left: none; padding: 8px;">' +
         '<div class="section-header">' +
             '<div>' +
-                '<div class="section-title">1. ' + (state.assessmentMode === 'options' ? 'Option Assessment' : 'Capture Mode') + '</div>' +
+                '<div class="section-title">' + (state.assessmentMode === 'options' ? 'Option Assessment Mode' : 'Capture Mode') + '</div>' +
             '</div>' +
             '<button class="btn" onclick="toggleMode()" style="background: ' + (state.assessmentMode === 'options' ? '#f97316' : '#16a34a') + '; color: white; padding: 6px 12px; font-size: 12px;">' +
                 '🔄 Switch to ' + (state.assessmentMode === 'options' ? 'Capture' : 'Options') + ' Mode' +
@@ -42,9 +42,9 @@ const html =
                 '<div style="background: ' + (state.assessmentMode === 'options' ? '#f0f9ff' : '#fff7ed') + '; border: 2px solid ' + (state.assessmentMode === 'options' ? '#3b82f6' : '#f97316') + '; border-radius: 8px; padding: 10px; margin-top: 12px;">' +
                     (state.saveError ? '<div id="saveError" style="background: #fee2e2; color: #991b1b; padding: 8px 12px; border-radius: 4px; margin-bottom: 12px; font-size: 13px; border: 1px solid #fecaca;">' + state.saveError + '</div>' : '') +
                     
-                    // Question label
+                    // Question label - same size as title
                     '<div style="margin-bottom: 8px;">' +
-                        '<label style="display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px;">' +
+                        '<label style="display: block; font-weight: 600; margin-bottom: 8px; font-size: 18px;">' +
                             (state.assessmentMode === 'options' ? 'What specific option are you considering?' : 'What are you experiencing right now?') +
                         '</label>' +
                     '</div>' +
