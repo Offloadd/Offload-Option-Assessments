@@ -41,8 +41,8 @@ const html =
                 // Flex container for side-by-side layout (options mode only)
                 (state.assessmentMode === 'options' ? '<div style="display: flex !important; flex-wrap: nowrap !important; gap: 8px; align-items: flex-end;">' : '') +
                 
-                // Assessment Zone (68% in options mode, full width in capture mode)
-                '<div style="' + (state.assessmentMode === 'options' ? 'flex: 0 0 68% !important; max-width: 68% !important; min-width: 0;' : '') + '">' +
+                // Assessment Zone (85% in options mode, full width in capture mode)
+                '<div style="' + (state.assessmentMode === 'options' ? 'flex: 0 0 85% !important; max-width: 85% !important; min-width: 0;' : '') + '">' +
                     '<div style="background: ' + (state.assessmentMode === 'options' ? '#f0f9ff' : '#fff7ed') + '; border: 2px solid ' + (state.assessmentMode === 'options' ? '#3b82f6' : '#f97316') + '; border-radius: 8px; padding: 10px;">' +
                     (state.saveError ? '<div id="saveError" style="background: #fee2e2; color: #991b1b; padding: 8px 12px; border-radius: 4px; margin-bottom: 12px; font-size: 13px; border: 1px solid #fecaca;">' + state.saveError + '</div>' : '') +
                     
@@ -53,22 +53,9 @@ const html =
                         '</label>' +
                     '</div>' +
                     
-                    // Life area dropdown on right
-                    '<div style="display: flex; justify-content: flex-end; margin-bottom: 8px; gap: 6px;">' +
-                        '<select onchange="loadLifeArea(this.value)" style="width: auto; min-width: 180px; padding: 6px 8px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; background: white;">' +
-                            '<option value="">Select Life Area (Optional)</option>' +
-                            Object.keys(state.lifeAreas).filter(key => state.lifeAreas[key].visible).map(areaKey => {
-                                const area = state.lifeAreas[areaKey];
-                                const isActive = state.activeLifeArea === areaKey;
-                                return '<option value="' + areaKey + '" ' + (isActive ? 'selected' : '') + '>' + area.label + '</option>';
-                            }).join('') +
-                        '</select>' +
-                        '<button class="btn" onclick="openLifeAreasModal()" style="background: #3b82f6; color: white; font-size: 11px; padding: 6px 10px;">✏️</button>' +
-                    '</div>' +
-                    
-                    // Topic label and main text boxes side by side
-                    '<div style="margin-bottom: 8px; display: flex; gap: 8px;">' +
-                        '<div style="flex: 0 0 20%;">' +
+                    // Topic label and Life Area dropdown on same line
+                    '<div style="margin-bottom: 8px; display: flex; gap: 8px; align-items: flex-end;">' +
+                        '<div style="flex: 0 0 30%;">' +
                             '<label style="display: block; font-weight: 600; margin-bottom: 4px; font-size: 12px;">Topic Label</label>' +
                             '<input type="text" ' +
                                    'value="' + (state.topicLabel || '') + '" ' +
@@ -76,13 +63,16 @@ const html =
                                    'placeholder="e.g., Tool work" ' +
                                    'style="width: 100%; padding: 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px;">' +
                         '</div>' +
-                        '<div style="flex: 1;">' +
-                            '<label style="display: block; font-weight: 600; margin-bottom: 4px; font-size: 12px;">Details</label>' +
-                            '<input type="text" ' +
-                                   'value="' + state.activeOptionText + '" ' +
-                                   'oninput="updateOptionText(this.value);" ' +
-                                   'placeholder="' + (state.assessmentMode === 'options' ? 'e.g., Accept new project offer' : 'e.g., Feeling urge to start another project immediately') + '" ' +
-                                   'style="width: 100%; padding: 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px;">' +
+                        '<div style="flex: 1; display: flex; gap: 6px; align-items: center;">' +
+                            '<select onchange="loadLifeArea(this.value)" style="flex: 1; padding: 6px 8px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; background: white;">' +
+                                '<option value="">Select Life Area (Optional)</option>' +
+                                Object.keys(state.lifeAreas).filter(key => state.lifeAreas[key].visible).map(areaKey => {
+                                    const area = state.lifeAreas[areaKey];
+                                    const isActive = state.activeLifeArea === areaKey;
+                                    return '<option value="' + areaKey + '" ' + (isActive ? 'selected' : '') + '>' + area.label + '</option>';
+                                }).join('') +
+                            '</select>' +
+                            '<button class="btn" onclick="openLifeAreasModal()" style="background: #3b82f6; color: white; font-size: 11px; padding: 6px 10px;">✏️</button>' +
                         '</div>' +
                     '</div>' +
                     
@@ -111,7 +101,7 @@ const html =
                                        'background: ' + getAssessmentGradient('opportunity') + ';">' +
                             '</div>' +
                             '<button class="btn" onclick="toggleTextArea(\'opportunity\')" ' +
-                                    'style="background: #e5e7eb; color: #374151; padding: 4px 8px; font-size: 11px; white-space: nowrap;">text</button>' +
+                                    'style="background: #e5e7eb; color: #374151; padding: 4px 8px; font-size: 11px; white-space: nowrap;">Details</button>' +
                         '</div>' +
                         '<textarea id="opportunityText" style="display: none; width: 100%; padding: 4px 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; font-family: inherit; height: 18px; resize: none; overflow-y: auto;" ' +
                                'placeholder="Why does this feel like an opportunity?" ' +
@@ -130,7 +120,7 @@ const html =
                                        'background: ' + getAssessmentGradient('stressor') + ';">' +
                             '</div>' +
                             '<button class="btn" onclick="toggleTextArea(\'stressor\')" ' +
-                                    'style="background: #e5e7eb; color: #374151; padding: 4px 8px; font-size: 11px; white-space: nowrap;">text</button>' +
+                                    'style="background: #e5e7eb; color: #374151; padding: 4px 8px; font-size: 11px; white-space: nowrap;">Details</button>' +
                         '</div>' +
                         '<textarea id="stressorText" style="display: none; width: 100%; padding: 4px 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; font-family: inherit; height: 18px; resize: none; overflow-y: auto;" ' +
                                'placeholder="Why does this feel stressful?" ' +
@@ -149,7 +139,7 @@ const html =
                                        'background: ' + getAssessmentGradient('stabilizer') + ';">' +
                             '</div>' +
                             '<button class="btn" onclick="toggleTextArea(\'stabilizer\')" ' +
-                                    'style="background: #e5e7eb; color: #374151; padding: 4px 8px; font-size: 11px; white-space: nowrap;">text</button>' +
+                                    'style="background: #e5e7eb; color: #374151; padding: 4px 8px; font-size: 11px; white-space: nowrap;">Details</button>' +
                         '</div>' +
                         '<textarea id="stabilizerText" style="display: none; width: 100%; padding: 4px 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; font-family: inherit; height: 18px; resize: none; overflow-y: auto;" ' +
                                'placeholder="Why does this feel stabilizing?" ' +
@@ -173,8 +163,8 @@ const html =
             
             // Comparison list (options mode only, positioned to right as sibling in flex container)
             (state.assessmentMode === 'options' ?
-                // Comparison list (30% width on right, full height)
-                '<div style="flex: 0 0 30% !important; max-width: 30% !important; min-width: 0; display: flex; flex-direction: column;">' +
+                // Comparison list (15% width on right, full height)
+                '<div style="flex: 0 0 15% !important; max-width: 15% !important; min-width: 0; display: flex; flex-direction: column;">' +
                     '<div style="background: #f0f9ff; border: 2px solid #3b82f6; border-radius: 8px; padding: 10px; flex: 1; display: flex; flex-direction: column;">' +
                         '<div style="display: flex; gap: 6px; margin-bottom: 12px; justify-content: center;">' +
                             '<button class="btn" onclick="saveAllComparison()" style="background: #16a34a; color: white; padding: 6px 8px; font-size: 11px; white-space: nowrap;">💾 Save All</button>' +
