@@ -38,6 +38,13 @@ const html =
         '</div>' +
         '<div style="margin-top: 12px;">' +
                 
+                // Container: sliders left, comparison right (only in options mode)
+                (state.assessmentMode === 'options' ? 
+                    '<div style="display: flex; gap: 12px;">' +
+                        // Left: Assessment Zone (70%)
+                        '<div style="flex: 0 0 70%;">'
+                : '') +
+                
                 // Assessment Zone
                 '<div style="background: ' + (state.assessmentMode === 'options' ? '#f0f9ff' : '#fff7ed') + '; border: 2px solid ' + (state.assessmentMode === 'options' ? '#3b82f6' : '#f97316') + '; border-radius: 8px; padding: 10px; margin-top: 12px;">' +
                     (state.saveError ? '<div id="saveError" style="background: #fee2e2; color: #991b1b; padding: 8px 12px; border-radius: 4px; margin-bottom: 12px; font-size: 13px; border: 1px solid #fecaca;">' + state.saveError + '</div>' : '') +
@@ -155,6 +162,53 @@ const html =
                     ) +
                 '</div>' +
             '</div>' +
+            
+            // Right side: Comparison list (only in options mode)
+            (state.assessmentMode === 'options' ?
+                '</div>' + // Close left column
+                '<div style="flex: 0 0 30%; display: flex; flex-direction: column;">' +
+                    '<div style="background: #f0f9ff; border: 2px solid #3b82f6; border-radius: 8px; padding: 10px; margin-top: 12px; height: 100%;">' +
+                        '<div style="display: flex; gap: 6px; margin-bottom: 12px;">' +
+                            '<button class="btn" onclick="saveAllComparison()" style="flex: 1; background: #16a34a; color: white; padding: 6px; font-size: 11px; white-space: nowrap;">💾 Save All</button>' +
+                            '<button class="btn" onclick="clearComparison()" style="flex: 1; background: #dc2626; color: white; padding: 6px; font-size: 11px; white-space: nowrap;">🗑️ Clear</button>' +
+                        '</div>' +
+                        '<div style="font-weight: 600; font-size: 13px; margin-bottom: 8px; color: #374151;">Options (' + state.comparison.length + '/6)</div>' +
+                        (state.comparison.length === 0 ?
+                            '<div style="color: #6b7280; font-size: 12px; text-align: center; padding: 20px 10px;">No options yet</div>'
+                        :
+                            '<div style="max-height: 500px; overflow-y: auto;">' +
+                                state.comparison.map(opt => {
+                                    const height = 300;
+                                    const maxLoad = 50;
+                                    const minGateHeight = 30;
+                                    const regulatedReduction = opt.regulatedLoad * 2;
+                                    let topGateHeight = minGateHeight + Math.max(0, Math.min((opt.threatLoad / maxLoad) * height * 1.8, height * 0.9) - regulatedReduction);
+                                    let bottomGateHeight = minGateHeight + Math.max(0, Math.min((opt.opportunityLoad / maxLoad) * height * 1.8, height * 0.9) - regulatedReduction);
+                                    const combinedHeight = topGateHeight + bottomGateHeight;
+                                    const maxCombined = height * 0.9;
+                                    if (combinedHeight > maxCombined) {
+                                        const scaleFactor = maxCombined / combinedHeight;
+                                        topGateHeight = Math.max(minGateHeight, topGateHeight * scaleFactor);
+                                        bottomGateHeight = Math.max(minGateHeight, bottomGateHeight * scaleFactor);
+                                    }
+                                    const availableSpace = height - topGateHeight - bottomGateHeight;
+                                    const stressPercent = Math.round((topGateHeight / height) * 100);
+                                    const regulatedPercent = Math.round((availableSpace / height) * 100);
+                                    const opportunityPercent = Math.round((bottomGateHeight / height) * 100);
+                                    
+                                    return '<div onclick="loadComparisonOption(' + opt.id + ')" style="background: white; border: 1px solid #e5e7eb; border-radius: 6px; padding: 8px; margin-bottom: 6px; cursor: pointer; position: relative; ' + (state.selectedComparisonId === opt.id ? 'border-color: #3b82f6; border-width: 2px;' : '') + '">' +
+                                        '<button onclick="event.stopPropagation(); deleteFromComparison(' + opt.id + ')" style="position: absolute; top: 4px; right: 4px; background: #ef4444; color: white; border: none; border-radius: 3px; width: 20px; height: 20px; font-size: 14px; line-height: 1; cursor: pointer; padding: 0;">×</button>' +
+                                        '<div style="font-weight: 600; font-size: 11px; color: #111827; margin-bottom: 4px; padding-right: 24px;">' + opt.lifeArea + '</div>' +
+                                        '<div style="font-size: 10px; color: #6b7280; margin-bottom: 4px; line-height: 1.3;">' + opt.optionText.substring(0, 40) + (opt.optionText.length > 40 ? '...' : '') + '</div>' +
+                                        '<div style="font-size: 10px; color: #6b7280;">S:' + stressPercent + '% R:' + regulatedPercent + '% O:' + opportunityPercent + '%</div>' +
+                                    '</div>';
+                                }).join('') +
+                            '</div>'
+                        ) +
+                    '</div>' +
+                '</div>' +
+                '</div>' // Close flex container
+            : '') +
     '</div>' +
 
     '</div>' +
@@ -196,52 +250,6 @@ const html =
             '<div class="gate-text-bottom" id="gateTextBottom">Opportunity - 0%</div>' +
             '<div class="river-text" id="riverText">Regulated<br>Processing<br>Capacity</div>' +
         '</div>' +
-    '</div>' +
-
-    '<div class="card">' +
-        '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">' +
-            '<h2 style="margin: 0;">⚖️ Option Comparison (' + state.comparison.length + '/6)</h2>' +
-            (state.comparison.length > 0 ? 
-                '<button class="btn" onclick="clearComparison()" style="background: #dc2626; color: white; padding: 8px 16px;">🗑️ Clear All</button>' 
-            : '') +
-        '</div>' +
-        (state.comparison.length === 0 ?
-            '<p style="color: #6b7280; text-align: center; padding: 20px;">No options in comparison yet. Add options above to compare them.</p>'
-        :
-            '<div style="margin-bottom: 16px;">' +
-                state.comparison.map(opt => {
-                    const height = 300;
-                    const maxLoad = 50;
-                    const minGateHeight = 30;
-                    const regulatedReduction = opt.regulatedLoad * 2;
-                    let topGateHeight = minGateHeight + Math.max(0, Math.min((opt.threatLoad / maxLoad) * height * 1.8, height * 0.9) - regulatedReduction);
-                    let bottomGateHeight = minGateHeight + Math.max(0, Math.min((opt.opportunityLoad / maxLoad) * height * 1.8, height * 0.9) - regulatedReduction);
-                    const combinedHeight = topGateHeight + bottomGateHeight;
-                    const maxCombined = height * 0.9;
-                    if (combinedHeight > maxCombined) {
-                        const scaleFactor = maxCombined / combinedHeight;
-                        topGateHeight = Math.max(minGateHeight, topGateHeight * scaleFactor);
-                        bottomGateHeight = Math.max(minGateHeight, bottomGateHeight * scaleFactor);
-                    }
-                    const availableSpace = height - topGateHeight - bottomGateHeight;
-                    const stressPercent = Math.round((topGateHeight / height) * 100);
-                    const regulatedPercent = Math.round((availableSpace / height) * 100);
-                    const opportunityPercent = Math.round((bottomGateHeight / height) * 100);
-                    
-                    return '<div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px; margin-bottom: 8px;">' +
-                        '<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">' +
-                            '<div style="flex: 1;">' +
-                                '<div style="font-weight: 600; color: #111827; margin-bottom: 4px;"><strong>' + opt.lifeArea + ':</strong> ' + opt.optionText + '</div>' +
-                                '<div style="font-size: 13px; color: #6b7280;">Stress: ' + stressPercent + '% | Regulated: ' + regulatedPercent + '% | Opportunity: ' + opportunityPercent + '%</div>' +
-                                '<div style="font-size: 12px; color: #9ca3af; margin-top: 2px;">Stressor: ' + opt.threatLoad + ' | Stabilizer: ' + opt.regulatedLoad + ' | Opportunity: ' + opt.opportunityLoad + '</div>' +
-                            '</div>' +
-                            '<button onclick="deleteFromComparison(' + opt.id + ')" style="padding: 6px 12px; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; white-space: nowrap;">Delete</button>' +
-                        '</div>' +
-                    '</div>';
-                }).join('') +
-            '</div>' +
-            '<button class="btn" onclick="saveAllComparison()" style="width: 100%; padding: 12px; background: #16a34a; color: white; font-size: 15px; font-weight: 600;">💾 Save All to Data Set</button>'
-        ) +
     '</div>' +
 
     '<div class="card" style="text-align: center; padding: 12px; border: 1px solid #dc2626;">' +
