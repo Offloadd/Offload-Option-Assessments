@@ -97,7 +97,7 @@ body {
 
 .section-card.expanded {
     grid-column: 1 / -1;
-    padding: 18px;
+    padding: 8px;
     cursor: default;
     margin-bottom: 12px;
 }
