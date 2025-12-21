@@ -7,6 +7,7 @@ const state = {
     
     // Option Assessment state
     activeLifeArea: null,
+    topicLabel: '',  // Short label for option (shows in comparison list)
     activeOptionText: '',
     hijackingEvent: '',  // 'yes', 'no', 'maybe', or '' (for options mode)
     opportunity: { value: 0, why: '' },
