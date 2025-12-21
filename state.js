@@ -24,6 +24,7 @@ const state = {
     
     // Comparison area - temporary holding for options
     comparison: [],
+    selectedComparisonId: null,  // Track which comparison option is selected
     
     entries: [],
     saveError: ''
