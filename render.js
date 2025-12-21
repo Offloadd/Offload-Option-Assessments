@@ -171,11 +171,8 @@ const html =
                 '</div>' +
             '</div>' +
             
-            // Comparison list (options mode only, positioned to right)
+            // Comparison list (options mode only, positioned to right as sibling in flex container)
             (state.assessmentMode === 'options' ?
-                // Close assessment zone div
-                '</div>' +
-                
                 // Comparison list (25% width on right)
                 '<div style="flex: 0 0 25% !important; max-width: 25% !important; min-width: 0;">' +
                     '<div style="background: #f0f9ff; border: 2px solid #3b82f6; border-radius: 8px; padding: 10px;">' +
