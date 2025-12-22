@@ -526,6 +526,19 @@ textarea {
 
 /* Mobile Responsive Styles */
 @media (max-width: 768px) {
+    /* FORCE VERTICAL STACKING on mobile */
+    div[style*="display: flex"][style*="align-items: flex-end"] {
+        flex-direction: column !important;
+    }
+    
+    div[style*="flex: 0 0 80%"],
+    div[style*="flex: 0 0 20%"],
+    div[style*="flex: 0 0 30%"] {
+        flex: 1 1 100% !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    
     body {
         padding: 8px;
     }
