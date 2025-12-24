@@ -32,10 +32,9 @@ function updateOptionText(text) {
 }
 
 function toggleTextArea(type) {
-    const textarea = document.getElementById(type + 'Text');
-    if (textarea) {
-        textarea.style.display = textarea.style.display === 'none' ? 'block' : 'none';
-    }
+    // Toggle the hidden state
+    state.hiddenSliders[type] = !state.hiddenSliders[type];
+    render();
 }
 
 function addLifeArea() {
