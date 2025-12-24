@@ -544,6 +544,7 @@ textarea {
         flex: 1 1 100% !important;
         max-width: 100% !important;
         width: 100% !important;
+        min-width: 100% !important;
     }
     
     /* Make options box wider and limit height on mobile */
@@ -551,8 +552,17 @@ textarea {
         flex: 0 0 auto !important;
         max-width: 100% !important;
         width: 100% !important;
+        min-width: 100% !important;
         max-height: 150px !important;
         min-height: 0 !important;
+    }
+    
+    /* Force the blue bordered inner boxes to full width too */
+    div[style*="border: 2px solid #3b82f6"],
+    div[style*="border: 2px solid #f97316"] {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
     }
     
     /* Make the inner blue box also constrained */
