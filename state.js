@@ -16,9 +16,9 @@ const state = {
     
     // Track which sliders are hidden
     hiddenSliders: {
-        opportunity: false,
-        stressor: false,
-        stabilizer: false
+        opportunity: true,
+        stressor: true,
+        stabilizer: true
     },
     
     lifeAreas: {
