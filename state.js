@@ -14,6 +14,13 @@ const state = {
     stressor: { value: 0, why: '' },
     stabilizer: { value: 0, why: '' },
     
+    // Track which sliders are hidden
+    hiddenSliders: {
+        opportunity: false,
+        stressor: false,
+        stabilizer: false
+    },
+    
     lifeAreas: {
         work: { label: 'Work/Projects', visible: true, custom: false },
         homeImprovement: { label: 'Home Improvements', visible: true, custom: false },
