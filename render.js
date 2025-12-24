@@ -107,7 +107,7 @@ const html =
                                     (state.hiddenSliders.opportunity ? 'Show' : 'Hide') + '</button>' +
                         '</div>' +
                         (state.hiddenSliders.opportunity ? '' :
-                            '<textarea id="opportunityText" style="' + (state.assessmentMode === 'options' ? 'display: block;' : 'display: none;') + ' width: 100%; padding: 4px 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; font-family: inherit; height: 18px; resize: none; overflow-y: auto;" ' +
+                            '<textarea id="opportunityText" style="display: block; width: 100%; padding: 4px 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; font-family: inherit; height: 18px; resize: none; overflow-y: auto;" ' +
                                    'placeholder="Why does this feel like an opportunity?" ' +
                                    'oninput="updateAssessmentText(\'opportunity\', this.value)">' + state.opportunity.why + '</textarea>'
                         ) +
@@ -131,7 +131,7 @@ const html =
                                     (state.hiddenSliders.stressor ? 'Show' : 'Hide') + '</button>' +
                         '</div>' +
                         (state.hiddenSliders.stressor ? '' :
-                            '<textarea id="stressorText" style="' + (state.assessmentMode === 'options' ? 'display: block;' : 'display: none;') + ' width: 100%; padding: 4px 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; font-family: inherit; height: 18px; resize: none; overflow-y: auto;" ' +
+                            '<textarea id="stressorText" style="display: block; width: 100%; padding: 4px 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; font-family: inherit; height: 18px; resize: none; overflow-y: auto;" ' +
                                    'placeholder="Why does this feel stressful?" ' +
                                    'oninput="updateAssessmentText(\'stressor\', this.value)">' + state.stressor.why + '</textarea>'
                         ) +
@@ -155,7 +155,7 @@ const html =
                                     (state.hiddenSliders.stabilizer ? 'Show' : 'Hide') + '</button>' +
                         '</div>' +
                         (state.hiddenSliders.stabilizer ? '' :
-                            '<textarea id="stabilizerText" style="' + (state.assessmentMode === 'options' ? 'display: block;' : 'display: none;') + ' width: 100%; padding: 4px 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; font-family: inherit; height: 18px; resize: none; overflow-y: auto;" ' +
+                            '<textarea id="stabilizerText" style="display: block; width: 100%; padding: 4px 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; font-family: inherit; height: 18px; resize: none; overflow-y: auto;" ' +
                                    'placeholder="Why does this feel stabilizing?" ' +
                                    'oninput="updateAssessmentText(\'stabilizer\', this.value)">' + state.stabilizer.why + '</textarea>'
                         ) +
