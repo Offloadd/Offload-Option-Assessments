@@ -526,9 +526,17 @@ textarea {
 
 /* Mobile Responsive Styles */
 @media (max-width: 768px) {
+    /* Make container full width on mobile */
+    .container {
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 4px !important;
+    }
+    
     /* FORCE VERTICAL STACKING on mobile - sliders full width */
     div[style*="display: flex"][style*="align-items: flex-end"] {
         flex-direction: column !important;
+        align-items: center !important;
     }
     
     /* Make slider area full width on mobile */
@@ -540,15 +548,23 @@ textarea {
     
     /* Make options box wider and limit height on mobile */
     div[style*="flex: 0 0 20%"] {
-        flex: 1 1 100% !important;
+        flex: 0 0 auto !important;
         max-width: 100% !important;
         width: 100% !important;
-        max-height: 200px !important;
+        max-height: 150px !important;
+        min-height: 0 !important;
+    }
+    
+    /* Make the inner blue box also constrained */
+    div[style*="flex: 0 0 20%"] > div {
+        max-height: 150px !important;
+        min-height: 0 !important;
     }
     
     /* Limit scrollable area height in options box */
-    div[style*="flex: 0 0 20%"] div[style*="overflow-y: auto"] {
-        max-height: 120px !important;
+    div[style*="flex: 0 0 20%"] div[style*="flex: 1"] {
+        max-height: 80px !important;
+        min-height: 0 !important;
     }
     
     /* Stack topic label and life area dropdown vertically on mobile */
