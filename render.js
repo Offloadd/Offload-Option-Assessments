@@ -94,18 +94,23 @@ const html =
                         '<div style="display: flex; gap: 8px; align-items: center; margin-bottom: 2px;">' +
                             '<div style="color: #4caf50; white-space: nowrap; font-size: 13px; font-weight: 600;">💚 Opportunity</div>' +
                             '<div style="color: #4caf50; font-weight: bold; min-width: 24px; text-align: center; font-size: 16px;">' + state.opportunity.value + '</div>' +
-                            '<div style="flex: 1; max-width: 90%;">' +
-                                '<input type="range" min="0" max="10" value="' + state.opportunity.value + '" ' +
-                                       'oninput="updateAssessment(\'opportunity\', this.value)" ' +
-                                       'style="width: 100%; height: 6px; border-radius: 3px; outline: none; -webkit-appearance: none; cursor: pointer; ' +
-                                       'background: ' + getAssessmentGradient('opportunity') + ';">' +
-                            '</div>' +
+                            (state.hiddenSliders.opportunity ? '' :
+                                '<div style="flex: 1; max-width: 90%;">' +
+                                    '<input type="range" min="0" max="10" value="' + state.opportunity.value + '" ' +
+                                           'oninput="updateAssessment(\'opportunity\', this.value)" ' +
+                                           'style="width: 100%; height: 6px; border-radius: 3px; outline: none; -webkit-appearance: none; cursor: pointer; ' +
+                                           'background: ' + getAssessmentGradient('opportunity') + ';">' +
+                                '</div>'
+                            ) +
                             '<button class="btn" onclick="toggleTextArea(\'opportunity\')" ' +
-                                    'style="background: #e5e7eb; color: #374151; padding: 4px 8px; font-size: 11px; white-space: nowrap;">Details</button>' +
+                                    'style="background: #e5e7eb; color: #374151; padding: 4px 8px; font-size: 11px; white-space: nowrap;">' +
+                                    (state.hiddenSliders.opportunity ? 'Show' : 'Hide') + '</button>' +
                         '</div>' +
-                        '<textarea id="opportunityText" style="display: none; width: 100%; padding: 4px 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; font-family: inherit; height: 18px; resize: none; overflow-y: auto;" ' +
-                               'placeholder="Why does this feel like an opportunity?" ' +
-                               'oninput="updateAssessmentText(\'opportunity\', this.value)">' + state.opportunity.why + '</textarea>' +
+                        (state.hiddenSliders.opportunity ? '' :
+                            '<textarea id="opportunityText" style="' + (state.assessmentMode === 'options' ? 'display: block;' : 'display: none;') + ' width: 100%; padding: 4px 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; font-family: inherit; height: 18px; resize: none; overflow-y: auto;" ' +
+                                   'placeholder="Why does this feel like an opportunity?" ' +
+                                   'oninput="updateAssessmentText(\'opportunity\', this.value)">' + state.opportunity.why + '</textarea>'
+                        ) +
                     '</div>' +
                     
                     // Stressor slider
@@ -113,18 +118,23 @@ const html =
                         '<div style="display: flex; gap: 8px; align-items: center; margin-bottom: 2px;">' +
                             '<div style="color: #f44336; white-space: nowrap; font-size: 13px; font-weight: 600;">⚠️ Stressor</div>' +
                             '<div style="color: #f44336; font-weight: bold; min-width: 24px; text-align: center; font-size: 16px;">' + state.stressor.value + '</div>' +
-                            '<div style="flex: 1; max-width: 90%;">' +
-                                '<input type="range" min="0" max="10" value="' + state.stressor.value + '" ' +
-                                       'oninput="updateAssessment(\'stressor\', this.value)" ' +
-                                       'style="width: 100%; height: 6px; border-radius: 3px; outline: none; -webkit-appearance: none; cursor: pointer; ' +
-                                       'background: ' + getAssessmentGradient('stressor') + ';">' +
-                            '</div>' +
+                            (state.hiddenSliders.stressor ? '' :
+                                '<div style="flex: 1; max-width: 90%;">' +
+                                    '<input type="range" min="0" max="10" value="' + state.stressor.value + '" ' +
+                                           'oninput="updateAssessment(\'stressor\', this.value)" ' +
+                                           'style="width: 100%; height: 6px; border-radius: 3px; outline: none; -webkit-appearance: none; cursor: pointer; ' +
+                                           'background: ' + getAssessmentGradient('stressor') + ';">' +
+                                '</div>'
+                            ) +
                             '<button class="btn" onclick="toggleTextArea(\'stressor\')" ' +
-                                    'style="background: #e5e7eb; color: #374151; padding: 4px 8px; font-size: 11px; white-space: nowrap;">Details</button>' +
+                                    'style="background: #e5e7eb; color: #374151; padding: 4px 8px; font-size: 11px; white-space: nowrap;">' +
+                                    (state.hiddenSliders.stressor ? 'Show' : 'Hide') + '</button>' +
                         '</div>' +
-                        '<textarea id="stressorText" style="display: none; width: 100%; padding: 4px 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; font-family: inherit; height: 18px; resize: none; overflow-y: auto;" ' +
-                               'placeholder="Why does this feel stressful?" ' +
-                               'oninput="updateAssessmentText(\'stressor\', this.value)">' + state.stressor.why + '</textarea>' +
+                        (state.hiddenSliders.stressor ? '' :
+                            '<textarea id="stressorText" style="' + (state.assessmentMode === 'options' ? 'display: block;' : 'display: none;') + ' width: 100%; padding: 4px 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; font-family: inherit; height: 18px; resize: none; overflow-y: auto;" ' +
+                                   'placeholder="Why does this feel stressful?" ' +
+                                   'oninput="updateAssessmentText(\'stressor\', this.value)">' + state.stressor.why + '</textarea>'
+                        ) +
                     '</div>' +
                     
                     // Stabilizer slider
@@ -132,18 +142,23 @@ const html =
                         '<div style="display: flex; gap: 8px; align-items: center; margin-bottom: 2px;">' +
                             '<div style="color: #1976d2; white-space: nowrap; font-size: 13px; font-weight: 600;">🛡️ Stabilizer</div>' +
                             '<div style="color: #1976d2; font-weight: bold; min-width: 24px; text-align: center; font-size: 16px;">' + state.stabilizer.value + '</div>' +
-                            '<div style="flex: 1; max-width: 90%;">' +
-                                '<input type="range" min="0" max="10" value="' + state.stabilizer.value + '" ' +
-                                       'oninput="updateAssessment(\'stabilizer\', this.value)" ' +
-                                       'style="width: 100%; height: 6px; border-radius: 3px; outline: none; -webkit-appearance: none; cursor: pointer; ' +
-                                       'background: ' + getAssessmentGradient('stabilizer') + ';">' +
-                            '</div>' +
+                            (state.hiddenSliders.stabilizer ? '' :
+                                '<div style="flex: 1; max-width: 90%;">' +
+                                    '<input type="range" min="0" max="10" value="' + state.stabilizer.value + '" ' +
+                                           'oninput="updateAssessment(\'stabilizer\', this.value)" ' +
+                                           'style="width: 100%; height: 6px; border-radius: 3px; outline: none; -webkit-appearance: none; cursor: pointer; ' +
+                                           'background: ' + getAssessmentGradient('stabilizer') + ';">' +
+                                '</div>'
+                            ) +
                             '<button class="btn" onclick="toggleTextArea(\'stabilizer\')" ' +
-                                    'style="background: #e5e7eb; color: #374151; padding: 4px 8px; font-size: 11px; white-space: nowrap;">Details</button>' +
+                                    'style="background: #e5e7eb; color: #374151; padding: 4px 8px; font-size: 11px; white-space: nowrap;">' +
+                                    (state.hiddenSliders.stabilizer ? 'Show' : 'Hide') + '</button>' +
                         '</div>' +
-                        '<textarea id="stabilizerText" style="display: none; width: 100%; padding: 4px 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; font-family: inherit; height: 18px; resize: none; overflow-y: auto;" ' +
-                               'placeholder="Why does this feel stabilizing?" ' +
-                               'oninput="updateAssessmentText(\'stabilizer\', this.value)">' + state.stabilizer.why + '</textarea>' +
+                        (state.hiddenSliders.stabilizer ? '' :
+                            '<textarea id="stabilizerText" style="' + (state.assessmentMode === 'options' ? 'display: block;' : 'display: none;') + ' width: 100%; padding: 4px 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; font-family: inherit; height: 18px; resize: none; overflow-y: auto;" ' +
+                                   'placeholder="Why does this feel stabilizing?" ' +
+                                   'oninput="updateAssessmentText(\'stabilizer\', this.value)">' + state.stabilizer.why + '</textarea>'
+                        ) +
                     '</div>' +
                     
                     // Buttons - different for each mode
