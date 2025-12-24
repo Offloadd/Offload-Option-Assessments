@@ -11,8 +11,10 @@ function preserveTextareaValues() {
     if (stabilizerTextarea) state.stabilizer.why = stabilizerTextarea.value;
 }
 
-function render() {
-preserveTextareaValues(); // Save any text being typed before re-rendering
+function render(skipPreserve = false) {
+if (!skipPreserve) {
+    preserveTextareaValues(); // Save any text being typed before re-rendering
+}
 const html =
 '<div class="card header" style="padding: 12px;">' +
 '<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">' +
@@ -165,12 +167,12 @@ const html =
                     (state.assessmentMode === 'options' ?
                         '<div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb; display: flex; gap: 8px;">' +
                             '<button class="btn" onclick="addToComparison()" style="flex: 1; padding: 12px; background: #3b82f6; color: white; font-size: 15px; font-weight: 600;">➕ Add to Comparison</button>' +
-                            '<button class="btn" onclick="resetAllSliders(); render();" style="flex: 1; padding: 12px; background: #6b7280; color: white; font-size: 15px; font-weight: 600;">🔄 Clear Sliders</button>' +
+                            '<button class="btn" onclick="resetAllSliders(); render(true);" style="flex: 1; padding: 12px; background: #6b7280; color: white; font-size: 15px; font-weight: 600;">🔄 Clear Sliders & Details</button>' +
                         '</div>'
                     :
                         '<div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb; display: flex; gap: 8px;">' +
                             '<button class="btn" onclick="saveToCapturedExperiences()" style="flex: 1; padding: 12px; background: #f97316; color: white; font-size: 15px; font-weight: 600;">💾 Save to Captured Experiences</button>' +
-                            '<button class="btn" onclick="resetAllSliders(); render();" style="flex: 1; padding: 12px; background: #6b7280; color: white; font-size: 15px; font-weight: 600;">🔄 Clear Sliders</button>' +
+                            '<button class="btn" onclick="resetAllSliders(); render(true);" style="flex: 1; padding: 12px; background: #6b7280; color: white; font-size: 15px; font-weight: 600;">🔄 Clear Sliders & Details</button>' +
                         '</div>'
                     ) +
                 '</div>' +
